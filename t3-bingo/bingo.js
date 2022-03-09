@@ -34,7 +34,7 @@ function Game(userName){
     function isBingo(){
         return this.board.isBingo();
     }
-    function fillDrum(){
+    function fillDrum(){ //objGame.fillDrum() dice que no es una función
         this.drum.length = 0;
         for (let i = 1; i <= 90; i++){
             this.drum[i-1] = i;
@@ -120,27 +120,29 @@ function bingo(){
     while (!exitMenu){
         let endOfGame = false;
         let laneDone = false;
-        const playerName = window.prompt("Introduce tu nombre de jugador.");
+        //const playerName = window.prompt("Introduce tu nombre de jugador.");
+        const playerName = "Pepito"; // borrar tras pruebas
         const currentGame = new Game(playerName);
         currentGame.fillDrum();
         while (!endOfGame){
             let currentNumber = currentGame.drawNumber();
-            // console sale tal numero
+            console.log("Ha salido el número "+currentNumber);
             currentGame.tryMatch(currentNumber);
             if (!laneDone){
                 if (currentGame.isLane()){
-                    //console linea
+                    console.log("Línea!");
                     laneDone = true;
                 }
             }
             if (currentGame.isBingo()){
-                //console bingo
+                console.log("Bingo!!");
                 endOfGame = true;
             }
-            console.table(currentGame.showBoard()); // mirar el formato
+            console.log(currentGame.showBoard()); // mirar el console.table
             currentGame.updateScore();
         }
         scoreBoard.addScore(currentGame.getScore());
+        exitMenu = window.confirm("Otra?");
     }        
 
 }
@@ -155,12 +157,21 @@ function generateBoard(){
         }
         lanesObjs.push(new Lane(...squaresObjs));
     }
-    return new Board(...lanesObjs[0]);
+    return new Board(...lanesObjs);
 }
-
+//genera un array de 3 arrays de 5 de enteros no repetidos entre 1 y 90
 function easyBoardGenerator(){
-    //genera un array de 3x5 de enteros no repetidos entre 1 y 90
-    return [[],[]];
+    let allNumbers = [];
+    let chosenNumbers = [[],[],[]];
+    for (let h = 1; h <= 90; h++){
+        allNumbers[h-1] = h;
+    }
+    for (let i = 0; i < 3; i++){
+        for (let j = 0; j < 5; j++){
+            chosenNumbers[i][j] = (allNumbers.splice((Math.floor(Math.random() * allNumbers.length)), 1))[0];
+        }
+    }
+    return chosenNumbers;
 }
 function boardGenerator(){
     //ya tal
