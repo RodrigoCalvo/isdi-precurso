@@ -1,0 +1,6 @@
+const testArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
+console.log("slice(0)"+testArray.slice(0));
+console.log("slice(4)"+testArray.slice(0, 4));
+console.log("slice(0-length)"+testArray.slice(0, testArray.length));
+console.log("slice(-4)"+testArray.slice(-4));
+console.log("slice(16)"+testArray.slice(0));

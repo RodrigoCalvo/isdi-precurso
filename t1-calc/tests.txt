@@ -1,0 +1,118 @@
+// funciona
+let userPlainData = window.prompt("Introduzca uno o dos números en la calculadora.");
+console.log(userPlainData);
+
+
+// funciona
+function getDataPrompt(message){
+    const dataPrompt = window.prompt(message);
+    return dataPrompt;
+}
+let userPlainData = getDataPrompt("Introduzca uno o dos números en la calculadora.");
+console.log(userPlainData);
+
+
+
+//funciona
+function checkData(dataString){
+    if(dataString === undefined){ // si la entrada es vacía
+        return "fanse undefined"; //false;
+    }
+    const dataSplit = dataString.split(" ");
+    if (dataSplit.length != 1 && dataSplit.length != 2){ // si no hay 1 o 2 datos
+        return "false mas de 1 o 2"; //false;
+    }
+    if (dataSplit.length == 1){ // si es 1 dato
+        if (Number.isNaN(Number.parseFloat(dataSplit[0]))){ // si no es un número
+            return "false no es un número"; //false;
+        }
+    }else { // si son dos datos
+        if(Number.isNaN(Number.parseFloat(dataSplit[0])) || Number.isNaN(Number.parseFloat(dataSplit[1]))){ // si cualquiera de los dos no es un número
+            return "false no son dos números"; //false;
+        }
+    }
+    return true;
+}
+console.log("Vacío: "+checkData(""));
+console.log("String: "+checkData("cacatua"));
+console.log("1 int: "+checkData("7"));
+console.log("2 ints: "+checkData("7 58"));
+console.log("2 string: "+checkData("perro caca"));
+console.log("3 ints: "+checkData("57 9 2"));
+
+//funciona
+let a;
+do{
+    a = window.prompt("Mete un 1");
+}while (a!=1);
+
+//funciona
+let a, booleano;
+do{
+    a = window.prompt("Mete un 1");
+    if(a == 1){
+        booleano = true;
+    }else {
+        booleano = false;
+    }
+}while (!booleano);
+
+
+//funciona, habia dejado las trazas y checkData no devolvía boolean sino string
+function checkData(dataString){
+    if(dataString === undefined){ // si la entrada es vacía
+        return false;
+    }
+    const dataSplit = dataString.split(" ");
+    if (dataSplit.length != 1 && dataSplit.length != 2){ // si no hay 1 o 2 datos
+        return false;
+    }
+    if (dataSplit.length == 1){ // si es 1 dato
+        if (Number.isNaN(Number(dataSplit[0]))){ // si no es un número
+            return false;
+        }
+    }else { // si son dos datos
+        if(Number.isNaN(Number(dataSplit[0])) || Number.isNaN(Number(dataSplit[1]))){ // si cualquiera de los dos no es un número
+            return false;
+        }
+    }
+    return true;
+}
+function getDataPrompt(message){
+    const dataPrompt = window.prompt(message);
+    return dataPrompt;
+}
+let userPlainData;
+let booleano;
+do{
+    userPlainData = getDataPrompt("Introduzca uno o dos números en la calculadora.");
+    booleano = checkData(userPlainData);
+    console.log(userPlainData+" "+booleano);
+}while (!booleano);
+
+
+//funciona
+function mathOperations(number1, number2){
+    let opsResult = [];
+    opsResult.push(number1 + number2);
+    opsResult.push(number1 - number2);
+    opsResult.push(number1 * number2);
+    opsResult.push(number1 / number2);
+    return opsResult;
+}
+let opResult = mathOperations(4, 2);
+console.log(opResult);
+
+
+//funciona
+function parseData(dataString){
+    const dataSplit = dataString.split(" ");
+    const dataArray = dataSplit.map(x => Number.parseFloat(x));
+    return dataArray;
+}
+console.log(parseData("4 2 9"));
+
+let userPlainData = window.prompt("Introduzca uno o dos números en la calculadora.");
+console.log(userPlainData);
+console.log(userPlainData=="");
+
