@@ -1,12 +1,20 @@
 function ScoreBoard(){
-    const scoreBoard = [];
+    this.scoreBoard = [];
     function addScore(score){
-        scoreBoard.push(score);
+        this.scoreBoard.push(score);
     }
     function showScoreBoard(){
-        for (let i = 0; i < scoreBoard.length; i++){
-            scoreBoard[i].showScore();
+        for (let i = 0; i < this.scoreBoard.length; i++){
+            return this.scoreBoard[i].showScore();
         }
+    }
+}
+function Score(name, score){
+    this.name = name;
+    this.score = score;
+    //date?
+    function showScore(){
+        return name+": "+score+" puntos";
     }
 }
 function Game(userName){
@@ -19,20 +27,20 @@ function Board(laneTop, laneMid, laneBot){
     this.laneBot = laneBot;
     let anyLaneMatched = false;
     function tryMatch(number){
-        return (laneTop.tryMatch(number) || laneMid.tryMatch(number) || laneBot.tryMatch(number));
+        return (this.laneTop.tryMatch(number) || this.laneMid.tryMatch(number) || this.laneBot.tryMatch(number));
     }
     function checkLane(){
-        if (anyLaneMatched){
-            return anyLaneMatched;
+        if (this.anyLaneMatched){
+            return this.anyLaneMatched;
         }
-        anyLaneMatched = (laneTop.isLane() || laneMid.isLane() || laneBot.isLane());
-        return anyLaneMatched;
+        this.anyLaneMatched = (this.laneTop.isLane() || this.laneMid.isLane() || this.laneBot.isLane());
+        return this.anyLaneMatched;
     }
     function isBingo(){
-        return (laneTop.isLane() && laneMid.isLane() && laneBot.isLane());
+        return (this.laneTop.isLane() && this.laneMid.isLane() && this.laneBot.isLane());
     }
     function showBoard(){
-        return [laneTop.showLane(), laneMid.showLane(), laneBot.showLane()];
+        return [this.laneTop.showLane(), this.laneMid.showLane(), this.laneBot.showLane()];
     }
 }
 function Lane(square1, square2, square3, square4, square5){
@@ -77,6 +85,7 @@ function Square(number){
 
 // main
 function bingo(){
+    
     //obj scoreBoard
     //obj game
 }
