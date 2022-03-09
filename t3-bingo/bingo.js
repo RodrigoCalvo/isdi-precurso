@@ -58,14 +58,14 @@ function Board(laneTop, laneMid, laneBot){
     function tryMatch(number){
         return (this.laneTop.tryMatch(number) || this.laneMid.tryMatch(number) || this.laneBot.tryMatch(number));
     }
-    function isLane(){
+    this.isLane= function(){
         if (this.anyLaneMatched){
             return this.anyLaneMatched;
         }
         this.anyLaneMatched = (this.laneTop.isLane() || this.laneMid.isLane() || this.laneBot.isLane());
         return this.anyLaneMatched;
     }
-    function isBingo(){
+    this.isBingo=()=>{
         return (this.laneTop.isLane() && this.laneMid.isLane() && this.laneBot.isLane());
     }
     function showBoard(){
@@ -92,7 +92,7 @@ function Square(number){
     this.number = number;
     this.isMatched = false;
     function tryMatch(newNumber){
-        if(this.number == newNumber){
+        if(this.number === newNumber){
             this.isMatched = true;
             return true;
         }
