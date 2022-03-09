@@ -20,6 +20,35 @@ function Score(name, score){
 function Game(userName){
     this.userName = userName;
     this.board = generateBoard();
+    this.drum = [];
+    this.score = 100;
+    function showBoard(){
+        return this.board.showBoard();
+    }
+    function tryMatch(number){
+        return this.board.tryMatch(number);
+    }
+    function isLane(){
+        return this.board.isLane();
+    }
+    function isBingo(){
+        return this.board.isBingo();
+    }
+    function fillDrum(){
+        this.drum.length = 0;
+        for (let i = 1; i <= 90; i++){
+            this.drum[i-1] = i;
+        }
+    }
+    function drawNumber(){
+        return (drum.splice((Math.floor(Math.random() * drum.length)), 1))[0];
+    }
+    function updateScore(){
+        this.score--;
+    }
+    function getScore(){
+        return new Score(this.userName, this.score);
+    }
 }
 function Board(laneTop, laneMid, laneBot){
     this.laneTop = laneTop;
@@ -29,7 +58,7 @@ function Board(laneTop, laneMid, laneBot){
     function tryMatch(number){
         return (this.laneTop.tryMatch(number) || this.laneMid.tryMatch(number) || this.laneBot.tryMatch(number));
     }
-    function checkLane(){
+    function isLane(){
         if (this.anyLaneMatched){
             return this.anyLaneMatched;
         }
@@ -61,19 +90,20 @@ function Lane(square1, square2, square3, square4, square5){
 }
 function Square(number){
     this.number = number;
-    let isMatched = false;
-    function tryMatch(numberM){
-        if (isMatched){
-            return isMatched;
+    this.isMatched = false;
+    function tryMatch(newNumber){
+        if(this.number == newNumber){
+            this.isMatched = true;
+            return true;
         }
-        if(this.number == numberM){
-            isMatched = true;
-        }
-        return isMatched;
+        return false;
+    }
+    function isMatched(){
+        return this.isMatched;
     }
     function showSquare(){
-        if (!isMatched){
-            return number;
+        if (!this.isMatched){
+            return String(this.number);
         }else {
             return "X";
         }
@@ -85,15 +115,40 @@ function Square(number){
 
 // main
 function bingo(){
-    
-    //obj scoreBoard
-    //obj game
+    const scoreBoard = new ScoreBoard();
+    let exitMenu = false;
+    while (!exitMenu){
+        let endOfGame = false;
+        let laneDone = false;
+        const playerName = window.prompt("Introduce tu nombre de jugador.");
+        const currentGame = new Game(playerName);
+        currentGame.fillDrum();
+        while (!endOfGame){
+            let currentNumber = currentGame.drawNumber();
+            // console sale tal numero
+            currentGame.tryMatch(currentNumber);
+            if (!laneDone){
+                if (currentGame.isLane()){
+                    //console linea
+                    laneDone = true;
+                }
+            }
+            if (currentGame.isBingo()){
+                //console bingo
+                endOfGame = true;
+            }
+            console.table(currentGame.showBoard()); // mirar el formato
+            currentGame.updateScore();
+        }
+        scoreBoard.addScore(currentGame.getScore());
+    }        
+
 }
 
 function generateBoard(){
     let boardNumbers = easyBoardGenerator();
     let lanesObjs = [];
-    for (let i = 0; i < boardNumbers.lenght; i++){
+    for (let i = 0; i < boardNumbers.length; i++){
         let squaresObjs = [];
         for (let j = 0; j < boardNumbers[i].length; j++){
             squaresObjs.push(new Square(boardNumbers[i][j]));
