@@ -1,115 +1,154 @@
-function ScoreBoard(){
-    this.scoreBoard = [];
-    function addScore(score){
-        this.scoreBoard.push(score);
-    }
-    function showScoreBoard(){
-        for (let i = 0; i < this.scoreBoard.length; i++){
-            return this.scoreBoard[i].showScore();
-        }
-    }
-}
-function Score(name, score){
-    this.name = name;
-    this.score = score;
-    //date?
-    function showScore(){
-        return name+": "+score+" puntos";
-    }
-}
-function Game(userName){
-    this.userName = userName;
-    this.board = generateBoard();
-    this.drum = [];
-    this.score = 100;
-    function showBoard(){
-        return this.board.showBoard();
-    }
-    function tryMatch(number){
-        return this.board.tryMatch(number);
-    }
-    function isLane(){
-        return this.board.isLane();
-    }
-    function isBingo(){
-        return this.board.isBingo();
-    }
-    function fillDrum(){ //objGame.fillDrum() dice que no es una función
-        this.drum.length = 0;
-        for (let i = 1; i <= 90; i++){
-            this.drum[i-1] = i;
-        }
-    }
-    function drawNumber(){
-        return (drum.splice((Math.floor(Math.random() * drum.length)), 1))[0];
-    }
-    function updateScore(){
-        this.score--;
-    }
-    function getScore(){
-        return new Score(this.userName, this.score);
-    }
-}
-function Board(laneTop, laneMid, laneBot){
-    this.laneTop = laneTop;
-    this.laneMid = laneMid;
-    this.laneBot = laneBot;
-    let anyLaneMatched = false;
-    function tryMatch(number){
-        return (this.laneTop.tryMatch(number) || this.laneMid.tryMatch(number) || this.laneBot.tryMatch(number));
-    }
-    this.isLane= function(){
-        if (this.anyLaneMatched){
-            return this.anyLaneMatched;
-        }
-        this.anyLaneMatched = (this.laneTop.isLane() || this.laneMid.isLane() || this.laneBot.isLane());
-        return this.anyLaneMatched;
-    }
-    this.isBingo=()=>{
-        return (this.laneTop.isLane() && this.laneMid.isLane() && this.laneBot.isLane());
-    }
-    function showBoard(){
-        return [this.laneTop.showLane(), this.laneMid.showLane(), this.laneBot.showLane()];
-    }
-}
-function Lane(square1, square2, square3, square4, square5){
-    this.square1 = square1;
-    this.square2 = square2;
-    this.square3 = square3;
-    this.square4 = square4;
-    this.square5 = square5;
-    function tryMatch(number){
-        return (square1.tryMatch(number) || square2.tryMatch(number) || square3.tryMatch(number) || square4.tryMatch(number) || square5.tryMatch(number))
-    }
-    function isLane(){
-        return (square1.isMatched() && square2.isMatched() && square3.isMatched() && square4.isMatched() && square5.isMatched());
-    }
-    function showLane(){
-        return [square1.showSquare(), square2.showSquare(), square3.showSquare(), square4.showSquare(), square5.showSquare()];
-    }
-}
 function Square(number){
     this.number = number;
     this.isMatched = false;
-    function tryMatch(newNumber){
-        if(this.number === newNumber){
+    this.tryMatchSquare = function(numberToMatch){
+        if(this.number === numberToMatch){
             this.isMatched = true;
             return true;
         }
         return false;
     }
-    function isMatched(){
+    this.isMatchedSquare = function(){
         return this.isMatched;
     }
-    function showSquare(){
+    this.showSquare = function(){
         if (!this.isMatched){
             return String(this.number);
         }else {
             return "X";
         }
     }
-    function showUnmatchedSquare(){
-        return number;
+    this.showUnmatchedSquare = function(){
+        return this.number;
+    }
+}
+
+function Lane(squares){
+    this.squares = squares; //array obj Square
+    this.laneDone = false;
+    this.tryMatchLane = function (number){
+        let matched = false;
+        let counter = 0;
+        while (!matched && counter < this.squares.length){
+            matched = this.squares[counter].tryMatchSquare(number);
+            counter++;
+        }
+        return matched;
+    }
+    this.isFullLane = function(){
+        let counter = 0;
+        let fullLane = true;
+        while (!this.laneDone && fullLane && counter < this.squares.length){
+            fullLane = this.squares[counter].isMatchedSquare();
+            counter++;
+        }
+        if (fullLane){
+            this.laneDone = true;
+        }
+        return this.laneDone;
+    }
+    this.showLane = function(){
+        let returnedArray = [];
+        for (let i = 0; i < this.squares.length; i++){
+            returnedArray.push(this.squares[i].showSquare());
+        }
+        return returnedArray;
+    }
+}
+
+function Board(lanes){
+    this.lanes = lanes; //array obj Lane
+    this.anyLaneMatched = false;
+    this.tryMatchBoard = function(number){
+        let matched = false;
+        let counter = 0;
+        while (!matched && counter < this.lanes.length){
+            matched = this.lanes[counter].tryMatchLane(number);
+            counter++;
+        }
+        return matched;
+    }
+    this.isFirstLane = function(){
+        if (this.anyLaneMatched) return false; //solo canta linea la primera vez
+        let counter = 0;
+        while (!this.anyLaneMatched && counter < this.lanes.length){
+            this.anyLaneMatched = this.lanes[counter].isFullLane();
+            counter++;
+        }
+        return this.anyLaneMatched;
+    }
+    this.isBingoBoard = function(){
+        let isBingo = true;
+        let counter = 0;
+        while (isBingo && counter < this.lanes.length){
+            isBingo = this.lanes[counter].isFullLane();
+            counter++;
+        }
+        return isBingo;
+    }
+    this.showBoard = function(){
+        let returnedArray = [];
+        for (let i = 0; i < this.lanes.length; i++){
+            returnedArray.push(this.lanes[i].showLane());
+        }
+        return returnedArray;
+    }
+}
+
+function Game(userName){
+    this.userName = userName;
+    this.board = generateBoard();
+    this.drum = [];
+    this.score = 100;
+    this.show = function(){
+        return this.board.showBoard();
+    }
+    this.tryMatch = function(number){
+        return this.board.tryMatchBoard(number);
+    }
+    this.isFirstLaneGame = function(){
+        return this.board.isFirstLane(); 
+    }
+    this.isBingo = function(){
+        return this.board.isBingoBoard();
+    }
+    this.fillDrum = function(){
+        this.drum.length = 0;
+        for (let i = 1; i <= 90; i++){
+            this.drum[i-1] = i;
+        }
+    }
+    this.drawNumber = function(){
+        return (this.drum.splice((Math.floor(Math.random() * this.drum.length)), 1))[0];
+    }
+    this.updateScore = function(){
+        this.score--;
+    }
+    this.getScore = function(){
+        return new Score(this.userName, this.score);
+    }
+}
+
+function Score(name, score){
+    this.name = name;
+    this.score = score;
+    //date?
+    this.showScore = function(){
+        return this.name+": "+this.score+" puntos\n";
+    }
+}
+
+function ScoreBoard(){
+    this.scoreBoard = [];
+    this.addScore = function(score){
+        this.scoreBoard.push(score);
+    }
+    this.showScoreBoard = function(){
+        let stringReturned = "";
+        for (let i = 0; i < this.scoreBoard.length; i++){
+            stringReturned += this.scoreBoard[i].showScore();
+        }
+        return stringReturned;
     }
 }
 
@@ -120,29 +159,34 @@ function bingo(){
     while (!exitMenu){
         let endOfGame = false;
         let laneDone = false;
-        //const playerName = window.prompt("Introduce tu nombre de jugador.");
-        const playerName = "Pepito"; // borrar tras pruebas
+        const playerName = window.prompt("Introduce tu nombre de jugador.");
         const currentGame = new Game(playerName);
+        console.log(currentGame.show()); // traza
         currentGame.fillDrum();
         while (!endOfGame){
             let currentNumber = currentGame.drawNumber();
             console.log("Ha salido el número "+currentNumber);
-            currentGame.tryMatch(currentNumber);
+            if (currentGame.tryMatch(currentNumber)){
+                console.log("Lo has tachado!");
+            }else {
+                console.log("Ese número no estaba en tu cartón.");
+            }
             if (!laneDone){
-                if (currentGame.isLane()){
-                    console.log("Línea!");
+                if (currentGame.isFirstLaneGame()){
+                    console.log("\t\tLínea!");
                     laneDone = true;
                 }
             }
             if (currentGame.isBingo()){
-                console.log("Bingo!!");
+                console.log("\n\t\tBingo!!\n\n");
                 endOfGame = true;
             }
-            console.log(currentGame.showBoard()); // mirar el console.table
+            console.table(currentGame.show()); // mirar el console.table
             currentGame.updateScore();
         }
         scoreBoard.addScore(currentGame.getScore());
-        exitMenu = window.confirm("Otra?");
+        console.log(scoreBoard.showScoreBoard());
+        exitMenu = !(window.confirm("Otra?"));
     }        
 
 }
@@ -155,9 +199,9 @@ function generateBoard(){
         for (let j = 0; j < boardNumbers[i].length; j++){
             squaresObjs.push(new Square(boardNumbers[i][j]));
         }
-        lanesObjs.push(new Lane(...squaresObjs));
+        lanesObjs.push(new Lane(squaresObjs));
     }
-    return new Board(...lanesObjs);
+    return new Board(lanesObjs);
 }
 //genera un array de 3 arrays de 5 de enteros no repetidos entre 1 y 90
 function easyBoardGenerator(){
