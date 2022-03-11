@@ -1,10 +1,9 @@
 class Question {
     constructor(letter, answer, question) {
         this.letter = letter;
-        this.index = letter.toUpperCase().charCodeAt(0) - 64; //convertir a:1 b:2 c:3...
         this.answer = answer;
         this.question = question;
-        this.status = 0;
+        this.isRight = undefined;
     }
     get letter(){
         return this.letter;
@@ -17,25 +16,35 @@ class Question {
     }
     tryResolve(answer) {
         if (this.answer === answer) {
-            this.status = 1;
+            this.status = true;
             return true;
         }else {
-            this.status = -1;
+            this.status = false;
             return false;
         }
     }
 }
 class Rosco {
-    constructor (questions){
-        this.questions = questions; //array
-        this.bookmark = 1;
+    constructor (questionsArray){
+        this.questionsArray = questionsArray; //array
+        this.bookmark = 0;
     }
     getQuestion (){
-        return questions[bookmark-1].question();
+        return this.questionsArray[this.bookmark].question();
     }
-
+    tryResolveQuestion(answer){
+        this.questionsArray[this.bookmark].tryResolve(answer);
+        this.bookmark++;
+    }
     skipQuestion(){ //pasapalabra
         this.bookmark++;
+    }
+    showRosco(){ //parejas letra-estado
+        let showRosco = [];
+        for (const question of this.questionsArray) {
+            showRosco.push({letter:(question.question()), status:(question.status())});
+        }
+        return showRosco;
     }
 }
 
