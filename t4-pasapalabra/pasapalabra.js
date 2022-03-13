@@ -24,25 +24,28 @@ class Rosco {
     getQuestion (){
         return this.questionsArray[this.bookmark].question;
     }
+    getLength(){
+        return this.questionsArray.length;
+    }
     tryResolveQuestion(answer){
         let solved = this.questionsArray[this.bookmark].tryResolve(answer);
         this.lastAnswer = this.questionsArray[this.bookmark].answer;
-        this.bookmark++;
-        if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
+        this.moveBookmark();
         return solved;
     }
     showLastAnswer(){
         return this.lastAnswer;
     }
     skipQuestion(){ //pasapalabra
-        this.bookmark++;
-        if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
+        this.moveBookmark();
+    }
+    moveBookmark(){ //busca la próxima sin responder
         let escapeCount = 0; //control para no dar vueltas sin fin
-        while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length){ //busca la próxima sin responder
+        do{ 
             this.bookmark++; 
             if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
             escapeCount++;
-        }
+        }while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length);
     }
     showRosco(){ //parejas letra-estado
         let showRosco = [];
@@ -72,6 +75,7 @@ class Game {
     }
     showInfo(){
         console.log("Contesta a las preguntas con la pista de la letra correspondiente.");
+        console.log("currentRosco length "+this.currentRosco.getLength()); // traza
     }
     askQuestion(){
         console.log(this.currentRosco.getQuestion());
@@ -84,8 +88,9 @@ class Game {
         if (givenAnswer.toUpperCase() === "PASAPALABRA"){
             console.log("La pregunta ha sido saltada.")
             this.currentRosco.skipQuestion();
+            return undefined;
         }
-        if (this.currentRosco.tryResolveQuestion()){ //si acierta
+        if (this.currentRosco.tryResolveQuestion(givenAnswer)){ //si acierta
             this.currentScore++; //recibe un punto
             this.answeredQuestions++; //pregunta contestada
             console.log("¡Respuesta correcta! ¡Enhorabuena!");
@@ -109,8 +114,8 @@ class Game {
         }
     }
     endOfGame(){
-        let end = this.answeredQuestions === this.currentRosco.length ? true : false;
-        if (end) scoreBoard.push(new Score(this.playerName, this.currentScore));
+        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
+        if (end) scoreBoard.addScore(new Score(this.playerName, this.currentScore));
         return end;
     }
 
@@ -159,15 +164,15 @@ const questionsAnswersDataBase = [
 function pasapalabra(){
     console.log("Bienvenido a PASAPALABRA");
     const currentGame = new Game("Jacinto"); //window.prompt("Introduce tu nombre de jugador:"));
-    currentGame.showInfo()
-    console.log(currentGame.currentRosco.questionsArray);//traza--------
+    currentGame.showInfo();
     let endGame = false;
     while (!endGame){
-        if(currentGame.handleAnswer(currentGame.askQuestion())){
+        if(currentGame.handleAnswer(currentGame.askQuestion()) === null){
             console.log("Programa interrumpido por el usuario.");
             console.log("Puntuación alcanzada: "+currentGame.currentScore);
             return undefined;
         }
+        currentGame.showGameStatus();
         endGame = currentGame.endOfGame();
     }
     console.log(scoreBoard.showScoreBoard());
