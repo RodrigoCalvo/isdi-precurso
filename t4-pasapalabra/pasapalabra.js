@@ -154,12 +154,9 @@ class ScoreBoard {
     };
 }
 
+import questions from "./preguntas.js";
 const scoreBoard = new ScoreBoard();
-const questionsAnswersDataBase = [
-    { letter: "a", answer: "abducir", question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien"},
-    { letter: "b", answer: "bingo", question: "CON LA B. Juego que ha sacado de quicio a todos los 'Skylabers' en las sesiones de precurso"},
-    { letter: "c", answer: "churumbel", question: "CON LA C. Niño, crío, bebé"}
-];
+const questionsAnswersDataBase = questions;
 
 function pasapalabra(){
     console.log("Bienvenido a PASAPALABRA");
@@ -177,3 +174,35 @@ function pasapalabra(){
     }
     console.log(scoreBoard.showScoreBoard());
 }
+
+/*
+const questionsAnswersDataBase = [
+    {letter: "a", answer: "abducir", question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien"},
+    {letter: "b", answer: "bingo", question: "CON LA B. Juego que ha sacado de quicio a todos los 'Skylabers' en las sesiones de precurso"},
+    {letter: "c", answer: "churumbel", question: "CON LA C. Niño, crío, bebé"},
+    {letter: "d", answer: "diarrea", question: "CON LA D. Anormalidad en la función del aparato digestivo caracterizada por frecuentes evacuaciones y su consistencia líquida"},
+    {letter: "e", answer: "ectoplasma", question: "CON LA E. Gelatinoso y se encuentra debajo de la membrana plasmática. Los cazafantasmas medían su radiación"},
+    {letter: "f", answer: "facil", question: "CON LA F. Que no requiere gran esfuerzo, capacidad o dificultad"},
+    {letter: "g", answer: "galaxia", question: "CON LA G. Conjunto enorme de estrellas, polvo interestelar, gases y partículas"},
+    {letter: "h", answer: "harakiri", question: "CON LA H. Suicidio ritual japonés por desentrañamiento"},
+    {letter: "i", answer: "iglesia", question: "CON LA I. Templo cristiano"},
+    {letter: "j", answer: "jabali", question: "CON LA J. Variedad salvaje del cerdo que sale en la película 'El Rey León', de nombre Pumba"},
+    {letter: "k", answer: "kamikaze", question: "CON LA K. Persona que se juega la vida realizando una acción temeraria"},
+    {letter: "l", answer: "licantropo", question: "CON LA L. Hombre lobo"},
+    {letter: "m", answer: "misantropo", question: "CON LA M. Persona que huye del trato con otras personas o siente gran aversión hacia ellas"},
+    {letter: "n", answer: "necedad", question: "CON LA N. Demostración de poca inteligencia"},
+    {letter: "ñ", answer: "señal", question: "CONTIENE LA Ñ. Indicio que permite deducir algo de lo que no se tiene un conocimiento directo."},
+    {letter: "o", answer: "orco", question: "CON LA O. Humanoide fantástico de apariencia terrible y bestial, piel de color verde creada por el escritor Tolkien"},
+    {letter: "p", answer: "protoss", question: "CON LA P. Raza ancestral tecnológicamente avanzada que se caracteriza por sus grandes poderes psíonicos del videojuego StarCraft"},
+    {letter: "q", answer: "queso", question: "CON LA Q. Producto obtenido por la maduración de la cuajada de la leche"},
+    {letter: "r", answer: "raton", question: "CON LA R. Roedor"},
+    {letter: "s", answer: "stackoverflow", question: "CON LA S. Comunidad salvadora de todo desarrollador informático"},
+    {letter: "t", answer: "terminator", question: "CON LA T. Película del director James Cameron que consolidó a Arnold Schwarzenegger como actor en 1984"},
+    {letter: "u", answer: "unamuno", question: "CON LA U. Escritor y filósofo español de la generación del 98 autor del libro 'Niebla' en 1914"},
+    {letter: "v", answer: "vikingos", question: "CON LA V. Nombre dado a los miembros de los pueblos nórdicos originarios de Escandinavia, famosos por sus incursiones y pillajes en Europa"},
+    {letter: "w", answer: "sandwich", question: "CONTIENE LA W. Emparedado hecho con dos rebanadas de pan entre las cuales se coloca jamón y queso"},
+    {letter: "x", answer: "botox", question: "CONTIENE LA X. Toxina bacteriana utilizada en cirujía estética"},
+    {letter: "y", answer: "peyote", question: "CONTIENE LA Y. Pequeño cáctus conocido por sus alcaloides psicoactivos utilizado de forma ritual y medicinal por indígenas americanos"},
+    {letter: "z", answer: "zen", question: "CON LA Z. Escuela de budismo que busca la experiencia de la sabiduría más allá del discurso racional"}
+    ];
+*/
