@@ -6,7 +6,7 @@ class Question {
         this.status = undefined; //true right, false wrong, undefined not answered
     }
     tryResolve(answer) {
-        if (String(this.answer).toUpperCase() === String(answer).toUpperCase()) {
+        if (this.answer.toUpperCase() === answer.toUpperCase()) {
             this.status = true;
             return true;
         }else {
@@ -15,13 +15,14 @@ class Question {
         }
     }
 }
+
 class Rosco {
     constructor (questionsArray){
-        this.questionsArray = questionsArray;
+        this.questionsArray = questionsArray; //array of Question
         this.bookmark = 0;
         this.lastAnswer;
     }
-    getQuestion (){
+    getQuestion(){
         return this.questionsArray[this.bookmark].question;
     }
     getLength(){
@@ -36,18 +37,19 @@ class Rosco {
     showLastAnswer(){
         return this.lastAnswer;
     }
-    skipQuestion(){ //pasapalabra
+    skipQuestion(){
         this.moveBookmark();
     }
-    moveBookmark(){ //busca la próxima sin responder
+    //Mueve bookmark hacia adelante hasta la próxima pregunta sin responder (status:undefined) en el array de Questions
+    moveBookmark(){
         let escapeCount = 0; //control para no dar vueltas sin fin
-        do{ 
-            this.bookmark++; 
+        do{
+            this.bookmark++;
             if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
             escapeCount++;
         }while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length);
     }
-    showRosco(){ //parejas letra-estado
+    showRosco(){
         let showRosco = [];
         for (const question of this.questionsArray) {
             showRosco.push({letter:(question.letter), status:(question.status)});
@@ -79,51 +81,50 @@ class Game {
     askQuestion(){
         console.log(this.currentRosco.getQuestion());
         return window.prompt("¿Respuesta?");
-        
     }
     handleAnswer(givenAnswer){
-        if (givenAnswer === null) return null;
+        if (givenAnswer === null) return null; //exit on cancel prompt
         if (givenAnswer.toUpperCase() === "END") return null;
         if (givenAnswer.toUpperCase() === "PASAPALABRA"){
             console.log("La pregunta ha sido saltada.")
             this.currentRosco.skipQuestion();
             return undefined;
         }
-        if (this.currentRosco.tryResolveQuestion(givenAnswer)){ //si acierta
-            this.currentScore++; //recibe un punto
-            this.answeredQuestions++; //pregunta contestada
+        if (this.currentRosco.tryResolveQuestion(givenAnswer)){
+            this.currentScore++;
+            this.answeredQuestions++;
             console.log("¡Respuesta correcta! ¡Enhorabuena!");
-        }else { //si falla
+        }else {
             this.answeredQuestions++
             console.log("¡Ooooh...! Has fallado...\nLa respuesta correcta era "+this.currentRosco.showLastAnswer());
         }
     }
-    showGameStatus(){ // TODO retocar formato de salida
+    showGameStatus(){
         let showGameArray = this.currentRosco.showRosco();
-        let finalMessage = "";
+        let finalMessage = [];
         for (const showItem of showGameArray){
-            let str = showItem.letter.toUpperCase()+": ";
+            let arr = [];
+            arr.push(showItem.letter.toUpperCase());
             if(showItem.status === undefined){
-                str = str+"sin contestar";
+                arr.push("Sin contestar");
             }else if(showItem.status === true){
-                str = str+"BIEN";
+                arr.push("Correcta");
             }else {
-                str = str+"MAL";
+                arr.push("Incorrecta");
             }
-            finalMessage += str+" ";
+            finalMessage.push(arr);
         }
-        console.log(finalMessage);
+        console.table(finalMessage);
     }
     endOfGame(){
-        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
+        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false; //contestado todo
         if (end) scoreBoard.addScore(new Score(this.playerName, this.currentScore));
         return end;
     }
-
+    //elige preguntas al azar de la bd, una para cada letra
     autoChooseQuestions(){
         const choosedQuestions = [];
         const abecedary = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-        
         for (const letterLoop of abecedary){
             let questionsWithALetter = questionsAnswersDataBase.filter(question => question.letter === letterLoop);
             choosedQuestions.push(questionsWithALetter[Math.floor(Math.random() * questionsWithALetter.length)]);
@@ -154,18 +155,16 @@ class ScoreBoard {
 }
 
 const scoreBoard = new ScoreBoard();
-/**
- *
- *
- * @return {*} 
- */
+
 function pasapalabra(){
     console.log("Bienvenido a PASAPALABRA");
-    const currentGame = new Game(window.prompt("Introduce tu nombre de jugador:"));
+    let playerName = window.prompt("Introduce tu nombre de jugador:");
+    if (playerName === null) return undefined; //exit on cancel prompt
+    const currentGame = new Game(playerName);
     currentGame.showInfo();
     let endGame = false;
     while (!endGame){
-        if(currentGame.handleAnswer(currentGame.askQuestion()) === null){
+        if(currentGame.handleAnswer(currentGame.askQuestion()) === null){ //exit on cancel prompt
             console.log("Programa interrumpido por el usuario.");
             console.log("Puntuación alcanzada: "+currentGame.currentScore);
             return undefined;
@@ -205,7 +204,6 @@ const questionsAnswersDataBase = [
     {letter: "x", answer: "bótox", question: "CONTIENE LA X. Toxina bacteriana utilizada en cirujía estética"},
     {letter: "y", answer: "peyote", question: "CONTIENE LA Y. Pequeño cáctus conocido por sus alcaloides psicoactivos utilizado de forma ritual y medicinal por indígenas americanos"},
     {letter: "z", answer: "zen", question: "CON LA Z. Escuela de budismo que busca la experiencia de la sabiduría más allá del discurso racional"},
-    //hasta aqui las del enunciado
     {letter: "a", answer: "arteria", question: "CON LA A. Conducto por donde va la sangre desde el corazón a las demás partes del cuerpo."},
     {letter: "b", answer: "bitácora", question: "CON LA B. En los barcos, especie de armario que está fijo en la cubierta y situado muy cerca del timón donde se pone la brújula."},
     {letter: "c", answer: "cicerone", question: "CON LA C. Persona que sirve a otras de guía y les va enseñando y explicando lugares y cosas interesantes."},
