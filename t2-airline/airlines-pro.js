@@ -56,16 +56,22 @@ function airlineInfo(){
  * Funciones que gestionan los menus de admin y user
  */
 function airlineMenu(){
-    const userLevel = window.prompt("Inserte ADMIN o USER para ver el menú correspondiente.");
-    if(userLevel == null){
-        return false; // salida en cancelar
-    }else if(userLevel.toUpperCase().trim() == "ADMIN"){
-        return menuAdmin();
-    }else if(userLevel.toUpperCase().trim() == "USER"){
-        return menuUser();
-    }else {
-        return false;
-    }
+    let isRightChoice = false;
+    do{
+        const userLevel = window.prompt("Inserte ADMIN o USER para ver el menú correspondiente.");
+        if(userLevel == null){
+            return false; // salida en cancelar
+        }else if(userLevel.toUpperCase().trim() == "ADMIN"){
+            isRightChoice = true;
+            return menuAdmin();
+        }else if(userLevel.toUpperCase().trim() == "USER"){
+            isRightChoice = true;
+            return menuUser();
+        }else {
+            isRightChoice = false;
+            console.log("Elija ADMIN o USER");
+        }
+    }while (!isRightChoice);
 }
 function menuAdmin(){
     let exit = false;
@@ -204,9 +210,9 @@ function setNewFlight(){
         alert("Máximo de vuelos alcanzado. Borre algún vuelo antes de añadir uno nuevo");
     }else {
         let usedIds = getUsedIds();
+        /* Entendido mal el enunciado, la ID debe generarse automáticamente
         console.log("IDs en uso: "+usedIds);
         let idIsOk = false;
-        let newId;
         while(!idIsOk){
             newId = window.prompt("Inserte la ID numérico del nuevo vuelo. No puede ser una ID ya en uso.");
             if (newId == null){
@@ -218,7 +224,9 @@ function setNewFlight(){
             }else {
                 idIsOk = true;
             }
-        }
+        } */
+        usedIds = usedIds.sort((a, b) => {return a - b;}); //ordena ids usadas
+        let newId = usedIds[usedIds.length-1] + 1; //nueva id = idMayor +1
         let newFrom, newTo, newCost, newScale;
         newFrom = window.prompt("Inserte el origen del vuelo.");
         if (newFrom == null) return undefined; // salida en cancelar
