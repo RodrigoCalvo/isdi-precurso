@@ -96,7 +96,7 @@ class Game {
             console.log("¡Respuesta correcta! ¡Enhorabuena!");
         }else {
             this.answeredQuestions++
-            console.log("¡Ooooh...! Has fallado...\nLa respuesta correcta era "+this.currentRosco.showLastAnswer());
+            console.log("¡Ooooh...! Has fallado...\nLa respuesta correcta era "+this.this.currentRosco.showLastAnswer());
         }
     }
     showGameStatus(){
