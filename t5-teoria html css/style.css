@@ -1,0 +1,42 @@
+.container {
+  background-color: lightskyblue;
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 20px;
+}
+
+.letters-list {
+  list-style: none;
+  padding: 0;
+}
+
+.letters-list li {
+  display: inline;
+  background-color: burlywood;
+  padding: 10px;
+  font-weight: bolder;
+  border-radius: 30px;
+}
+
+li.required-letter {
+  background-color: red;
+  border: white 2px solid;
+}
+
+.words-list {
+  list-style: none;
+  padding: 0;
+}
+
+.purple-word {
+  background-color: blueviolet;
+}
+
+.text-input {
+  margin: 10px;
+}
+
+button {
+  margin: 5px;
+}
