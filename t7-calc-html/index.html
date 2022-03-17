@@ -5,40 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora ISDI</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <table>
         <tr>
-            <td colspan="4">0</td>
+            <td class="display-top" id="history-display" colspan="4">0</td>
         </tr>
         <tr>
-            <td colspan="2">AC</td>
-            <td>R</td>
-            <td>÷</td>
+            <td class="display-bottom" id="input-display" colspan="4">0</td>
         </tr>
         <tr>
-            <td>7</td>
-            <td>8</td>
-            <td>9</td>
-            <td>×</td>
+            <td class="number-button" id="ac-button" colspan="2">AC</td>
+            <td class="number-button" id="re-button">R</td>
+            <td class="operation-button" id="division-button">÷</td>
         </tr>
         <tr>
-            <td>4</td>
-            <td>5</td>
-            <td>6</td>
-            <td>-</td>
+            <td class="number-button" id="button-7">7</td>
+            <td class="number-button" id="button-8">8</td>
+            <td class="number-button" id="button-9">9</td>
+            <td class="operation-button" id="product-button">×</td>
         </tr>
         <tr>
-            <td>1</td>
-            <td>2</td>
-            <td>3</td>
-            <td>+</td>
+            <td class="number-button" id="button-4">4</td>
+            <td class="number-button" id="button-5">5</td>
+            <td class="number-button" id="button-6">6</td>
+            <td class="operation-button" id="minus-button">-</td>
         </tr>
         <tr>
-            <td colspan="2">0</td>
-            <td>,</td>
-            <td>=</td>
+            <td class="number-button" id="button-1">1</td>
+            <td class="number-button" id="button-2">2</td>
+            <td class="number-button" id="button-3">3</td>
+            <td class="operation-button" id="plus-button">+</td>
+        </tr>
+        <tr>
+            <td class="number-button" id="button-0" colspan="2">0</td>
+            <td class="number-button" id="button-comma">,</td>
+            <td class="operation-button" id="equal-button">=</td>
         </tr>
     </table>
+    <script src="./calculator.js"></script>
 </body>
 </html>
