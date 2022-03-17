@@ -96,7 +96,7 @@ class Game {
             console.log("¡Respuesta correcta! ¡Enhorabuena!");
         }else {
             this.answeredQuestions++
-            console.log("¡Ooooh...! Has fallado...\nLa respuesta correcta era "+this.this.currentRosco.showLastAnswer());
+            console.log("¡Ooooh...! Has fallado...\nLa respuesta correcta era "+this.currentRosco.showLastAnswer());
         }
     }
     showGameStatus(){
@@ -143,7 +143,7 @@ class ScoreBoard {
     }
     addScore(score){
         this.scoreBoard.push(score);
-        this.scoreBoard.sort((a, b) => b.getScore() - a.getScore());
+        this.scoreBoard.sort((a, b) => b.score - a.score);
     };
     showScoreBoard(){
         let stringScores = "";
