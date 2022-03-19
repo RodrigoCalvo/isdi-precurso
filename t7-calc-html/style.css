@@ -14,12 +14,13 @@ td {
 .display-top {
     text-align: right;
     border-bottom: 0px;
+    height: 2.2rem;
 }
 .display-bottom {
     border-top: 0px;
     text-align: right;
     font-size: 2.9rem;
-
+    height: 3.4rem;
 }
 .number-button, .operation-button{
     padding: 17px 27px;
