@@ -119,13 +119,13 @@ class Calculator{
                         this.inputDisplay.addToDisplay(this.currentOperation.resolveOperation());
                         this.inputDisplay.isResult = true;
                         this.currentOperation = undefined;
-                    }
+                    } //TODO controlar longitud de resultados
                 }
                 break;
-            case "0": //controlar no añadir 0 a la izquierda
+            case "0": //controla no añadir 0 a la izquierda
                 if (this.inputDisplay.currentDisplay !== ""){
                     this.inputDisplay.addToDisplay(charButton);
-                }
+                } //TODO: controlar 0 para 0,xxx
                 break;
             default:
                 this.inputDisplay.addToDisplay(charButton);
