@@ -14,7 +14,7 @@ class OtraClase{
     }
     addEventListeners(elementID){
         const button = document.querySelector(elementID);
-        button.addEventListener("click", this.handleEvent);
+        button.addEventListener("click", this);
     }
     handleEvent(event){
         console.log(this.unObjeto);

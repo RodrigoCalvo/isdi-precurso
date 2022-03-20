@@ -71,19 +71,20 @@ class Calculator{
     #addEventListeners(elementsClass){
         const elements = document.querySelectorAll("."+elementsClass);
         for (let i = 0; i < elements.length; i++){
-            elements[i].addEventListener("click", this.#myHandleEvent);
+            elements[i].addEventListener("click", this);
         }
     }
-    #myHandleEvent(event){
+    handleEvent(event){
         const charButton = String(event.target.id[event.target.id.length -1]);
-        console.log(this.inputDisplay);
         switch(charButton){
             case "c":
                 this.inputDisplay.cleanDisplay();
                 this.historyDisplay.cleanDisplay();
                 break;
             case "r":
-                this.inputDisplay.deleteLast();
+                if(!this.inputDisplay.isResult){
+                    this.inputDisplay.deleteLast();
+                }
                 break;
             case ".":
                 if (this.inputDisplay.currentDisplay.indexOf(charButton) === -1){
@@ -92,13 +93,21 @@ class Calculator{
                 break;
             case "+":
             case "-":
+                if(this.inputDisplay.currentDisplay==="0"||this.inputDisplay.currentDisplay===""){ //numeros negativos
+                    this.inputDisplay.addToDisplay(charButton);
+                    break;
+                }
             case "*":
             case "/":
                 if (this.inputDisplay.isThereAnOperationNumber()){
-                    this.currentOperation = new Operation(Number.parseFloat(this.currentDisplay), charButton);
-                    this.historyDisplay.cleanDisplay();
-                    this.historyDisplay.addToDisplay(this.currentDisplay+charButton);
-                    this.inputDisplay.cleanDisplay();
+                    if(this.currentOperation === undefined){
+                        this.currentOperation = new Operation(Number.parseFloat(this.inputDisplay.currentDisplay), charButton);
+                        this.historyDisplay.cleanDisplay();
+                        this.historyDisplay.addToDisplay(this.inputDisplay.currentDisplay+charButton);
+                        this.inputDisplay.cleanDisplay();
+                    }else {
+                        //si has hecho a+b+...
+                    }
                 }
                 break;
             case "=":
@@ -106,9 +115,9 @@ class Calculator{
                     if(this.inputDisplay.isThereAnOperationNumber()){
                         this.currentOperation.addSecondOperand(Number.parseFloat(this.inputDisplay.currentDisplay));
                         this.historyDisplay.addToDisplay(this.inputDisplay.currentDisplay);
-                        this.historyDisplay.cleanDisplay();
-                        this.historyDisplay.addToDisplay(this.currentOperation.resolveOperation());
-                        this.isResult = true;
+                        this.inputDisplay.cleanDisplay();
+                        this.inputDisplay.addToDisplay(this.currentOperation.resolveOperation());
+                        this.inputDisplay.isResult = true;
                         this.currentOperation = undefined;
                     }
                 }
@@ -119,7 +128,6 @@ class Calculator{
                 }
                 break;
             default:
-                console.log(charButton);
                 this.inputDisplay.addToDisplay(charButton);
                 break;
         }
