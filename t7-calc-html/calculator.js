@@ -2,10 +2,17 @@ class Display{
     constructor(elementId){
         this.elementId = "#"+elementId;
         this.currentDisplay = "";
+        this.isResult = false;
     }
     addToDisplay(character) {
-        if(this.currentDisplay.length <=10) this.currentDisplay += character;
-        this.#updateDisplay();
+        if(this.isResult){
+            this.currentDisplay = "";
+            this.isResult = false;
+        }
+        if(this.currentDisplay.length <=10){
+            this.currentDisplay += character;
+            this.#updateDisplay();
+        }    
     }
     deleteLast() {
         this.currentDisplay = this.currentDisplay.slice(0, -1);
@@ -15,8 +22,43 @@ class Display{
         this.currentDisplay = "";
         this.#updateDisplay();
     }
+    isThereAnOperationNumber(){
+        if(this.currentDisplay === "") return false;
+        if(this.currentDisplay === "0") return false;
+        if(this.currentDisplay === "0,") return false;
+        if(this.currentDisplay === "-") return false;
+        return true;
+    }
     #updateDisplay(){
         document.querySelector(this.elementId).innerHTML = this.currentDisplay;
+    }
+}
+class Operation{
+    constructor(firstOperand, operator){
+        this.firstOperand = firstOperand;
+        this.operator = operator;
+        this.secondOperand;
+    }
+    addSecondOperand(secondOperand){
+        this.secondOperand = secondOperand;
+    }
+    resolveOperation(){
+        let operationResult;
+        switch(this.operator){
+            case "+":
+                operationResult = this.firstOperand+this.secondOperand;
+                break;
+            case "-":
+                operationResult = this.firstOperand-this.secondOperand;
+                break;
+            case "*":
+                operationResult = this.firstOperand*this.secondOperand;
+                break;
+            case "/":
+                operationResult = this.firstOperand/this.secondOperand;
+                break;
+        }
+        return operationResult;
     }
 }
 class Calculator{
@@ -24,6 +66,7 @@ class Calculator{
         this.historyDisplay = new Display(elementTopDisplayId);
         this.inputDisplay = new Display(elementBotDisplayId);
         this.#addEventListeners(elementAllButtonsClass);
+        this.currentOperation;
     }
     #addEventListeners(elementsClass){
         const elements = document.querySelectorAll("."+elementsClass);
@@ -48,19 +91,26 @@ class Calculator{
                 }
                 break;
             case "+":
-                //
-                break;
             case "-":
-                //
-                break;
             case "*":
-                //
-                break;
             case "/":
-                //
+                if (this.inputDisplay.isThereAnOperationNumber()){
+                    this.currentOperation = new Operation(this.currentDisplay, charButton);
+                    this.historyDisplay.cleanDisplay();
+                    this.historyDisplay.addToDisplay(this.currentDisplay+charButton);
+                    this.inputDisplay.cleanDisplay();
+                }
                 break;
             case "=":
-                //
+                if (this.currentOperation !== undefined){
+                    if(this.inputDisplay.isThereAnOperationNumber()){
+                        this.currentOperation.addSecondOperand(this.inputDisplay.currentDisplay);
+                        this.historyDisplay.addToDisplay(this.inputDisplay.currentDisplay);
+                        this.historyDisplay.cleanDisplay();
+                        this.historyDisplay.addToDisplay(this.currentOperation.resolveOperation());
+                        this.isResult = true;
+                    }
+                }
                 break;
             case "0": //controlar no añadir 0 a la izquierda
                 if (this.inputDisplay.currentDisplay !== ""){
