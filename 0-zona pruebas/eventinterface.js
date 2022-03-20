@@ -17,8 +17,10 @@ class OtraClase{
         button.addEventListener("click", this.handleEvent);
     }
     handleEvent(event){
+        console.log(this.unObjeto);
         this.unObjeto.enseñar(event.target.id); //TypeError: unObjeto es undefined
     }
 }
 
 const myObjeto = new OtraClase("cactus", "cocina", "#idbot");
+console.log(myObjeto.unObjeto);

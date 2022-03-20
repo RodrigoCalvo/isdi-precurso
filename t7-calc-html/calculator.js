@@ -95,7 +95,7 @@ class Calculator{
             case "*":
             case "/":
                 if (this.inputDisplay.isThereAnOperationNumber()){
-                    this.currentOperation = new Operation(this.currentDisplay, charButton);
+                    this.currentOperation = new Operation(Number.parseFloat(this.currentDisplay), charButton);
                     this.historyDisplay.cleanDisplay();
                     this.historyDisplay.addToDisplay(this.currentDisplay+charButton);
                     this.inputDisplay.cleanDisplay();
@@ -104,11 +104,12 @@ class Calculator{
             case "=":
                 if (this.currentOperation !== undefined){
                     if(this.inputDisplay.isThereAnOperationNumber()){
-                        this.currentOperation.addSecondOperand(this.inputDisplay.currentDisplay);
+                        this.currentOperation.addSecondOperand(Number.parseFloat(this.inputDisplay.currentDisplay));
                         this.historyDisplay.addToDisplay(this.inputDisplay.currentDisplay);
                         this.historyDisplay.cleanDisplay();
                         this.historyDisplay.addToDisplay(this.currentOperation.resolveOperation());
                         this.isResult = true;
+                        this.currentOperation = undefined;
                     }
                 }
                 break;
