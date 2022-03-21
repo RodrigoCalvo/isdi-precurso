@@ -34,6 +34,7 @@ class Display{
         document.querySelector(this.elementId).innerHTML = this.currentDisplay;
     }
 }
+
 class Operation{
     constructor(firstOperand, operator){
         this.firstOperand = firstOperand;
@@ -62,6 +63,7 @@ class Operation{
         return operationResult;
     }
 }
+
 class Calculator{
     constructor(elementTopDisplayId, elementBotDisplayId, elementAllButtonsClass){
         this.historyDisplay = new Display(elementTopDisplayId);
@@ -137,7 +139,7 @@ class Calculator{
                         this.inputDisplay.addToDisplay(this.#roundResults(this.currentOperation.resolveOperation()));
                         this.inputDisplay.isResult = true;
                         this.currentOperation = undefined;
-                    } //TODO controlar longitud de resultados
+                    }
                 }
                 break;
             case "0":
@@ -152,12 +154,12 @@ class Calculator{
         }
     }
     #roundResults(unroundedResult){
-        let roundedResult; // = unroundedResults;
+        let roundedResult;
         let stringNumber = String(unroundedResult);
         let integerPart = stringNumber.split(".")[0];
         let decimalPart = stringNumber.split(".")[1];
         if(integerPart.length > 10){
-            roundedResult = 0; // si se sale del display, operacion abortada
+            roundedResult = 0;
             this.historyDisplay.cleanDisplay();
             this.historyDisplay.addToDisplay("Error:Num too large");
         }else {
