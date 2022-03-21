@@ -1,4 +1,4 @@
-export const questions = [
+const questions = [
     {letter: "a", answer: "abducir", question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien"},
     {letter: "b", answer: "bingo", question: "CON LA B. Juego que ha sacado de quicio a todos los 'Skylabers' en las sesiones de precurso"},
     {letter: "c", answer: "churumbel", question: "CON LA C. Niño, crío, bebé"},

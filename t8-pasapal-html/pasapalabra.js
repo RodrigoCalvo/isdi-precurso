@@ -75,28 +75,23 @@ class Game {
         this.answeredQuestions = 0;
         this.currentScore = 0;
     }
-    showInfo(){
-        console.log("Contesta a las preguntas con la pista de la letra correspondiente.");
-    }
     askQuestion(){
-        console.log(this.currentRosco.getQuestion());
-        return window.prompt("¿Respuesta?");
+        return this.currentRosco.getQuestion();
     }
     handleAnswer(givenAnswer){
         if (givenAnswer === null) return null; //exit on cancel prompt
         if (givenAnswer.toUpperCase() === "END") return null;
         if (givenAnswer.toUpperCase() === "PASAPALABRA"){
-            console.log("La pregunta ha sido saltada.")
             this.currentRosco.skipQuestion();
             return undefined;
         }
         if (this.currentRosco.tryResolveQuestion(givenAnswer)){
             this.currentScore++;
             this.answeredQuestions++;
-            console.log("¡Respuesta correcta! ¡Enhorabuena!");
+            return true;
         }else {
             this.answeredQuestions++
-            console.log("¡Ooooh...! Has fallado...\nLa respuesta correcta era "+this.currentRosco.showLastAnswer());
+            return this.currentRosco.showLastAnswer();
         }
     }
     showGameStatus(){
@@ -114,7 +109,7 @@ class Game {
             }
             finalMessage.push(arr);
         }
-        console.table(finalMessage);
+        //console.table(finalMessage);
     }
     endOfGame(){
         let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false; //contestado todo
@@ -161,7 +156,6 @@ function pasapalabra(){
     let playerName = window.prompt("Introduce tu nombre de jugador:");
     if (playerName === null) return undefined; //exit on cancel prompt
     const currentGame = new Game(playerName);
-    currentGame.showInfo();
     let endGame = false;
     while (!endGame){
         if(currentGame.handleAnswer(currentGame.askQuestion()) === null){ //exit on cancel prompt
@@ -169,11 +163,12 @@ function pasapalabra(){
             console.log("Puntuación alcanzada: "+currentGame.currentScore);
             return undefined;
         }
-        currentGame.showGameStatus();
         endGame = currentGame.endOfGame();
     }
     console.log(scoreBoard.showScoreBoard());
 }
+
+pasapalabra();
 
 //import questionsAnswersDataBase from "./preguntas.js";
 const questionsAnswersDataBase = [
