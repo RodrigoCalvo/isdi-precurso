@@ -1,15 +1,16 @@
 class Display{
     constructor(elementId){
         this.elementId = "#"+elementId;
-        this.currentDisplay = "";
+        this.currentDisplay = "0";
         this.isResult = false;
     }
     addToDisplay(character) {
         if(this.isResult){
-            this.currentDisplay = "";
+            this.currentDisplay = "0";
             this.isResult = false;
         }
         if(this.currentDisplay.length <=10){
+            if (this.currentDisplay === "0") this.deleteLast();
             this.currentDisplay += character;
             this.#updateDisplay();
         }    
@@ -19,7 +20,7 @@ class Display{
         this.#updateDisplay();
     }
     cleanDisplay() {
-        this.currentDisplay = "";
+        this.currentDisplay = "0";
         this.#updateDisplay();
     }
     isThereAnOperationNumber(){
@@ -76,10 +77,15 @@ class Calculator{
     }
     handleEvent(event){
         const charButton = String(event.target.id[event.target.id.length -1]);
+        this.#operate(charButton);
+    }
+    #operate(charButton){
         switch(charButton){
             case "c":
                 this.inputDisplay.cleanDisplay();
                 this.historyDisplay.cleanDisplay();
+                this.inputDisplay.isResult = false;
+                this.currentOperation = undefined;
                 break;
             case "r":
                 if(!this.inputDisplay.isResult){
@@ -87,16 +93,23 @@ class Calculator{
                 }
                 break;
             case ".":
-                if (this.inputDisplay.currentDisplay.indexOf(charButton) === -1){
-                    this.inputDisplay.addToDisplay(charButton);
+                if(this.inputDisplay.currentDisplay !== ""){
+                    if (this.inputDisplay.currentDisplay.indexOf(charButton) === -1){
+                        if(this.inputDisplay.currentDisplay === "0"){
+                            this.inputDisplay.addToDisplay("0"+charButton);
+                        }else {
+                            this.inputDisplay.addToDisplay(charButton);
+                        }
+                    }
                 }
                 break;
-            case "+":
             case "-":
-                if(this.inputDisplay.currentDisplay==="0"||this.inputDisplay.currentDisplay===""){ //numeros negativos
+                if(this.inputDisplay.currentDisplay==="0") this.inputDisplay.deleteLast();
+                if(this.inputDisplay.currentDisplay===""){ //numeros negativos
                     this.inputDisplay.addToDisplay(charButton);
                     break;
                 }
+            case "+":
             case "*":
             case "/":
                 if (this.inputDisplay.isThereAnOperationNumber()){
@@ -105,8 +118,13 @@ class Calculator{
                         this.historyDisplay.cleanDisplay();
                         this.historyDisplay.addToDisplay(this.inputDisplay.currentDisplay+charButton);
                         this.inputDisplay.cleanDisplay();
-                    }else {
-                        //si has hecho a+b+...
+                    }else { //si has hecho a+b+
+                        this.currentOperation.addSecondOperand(Number.parseFloat(this.inputDisplay.currentDisplay));
+                        this.historyDisplay.cleanDisplay();
+                        this.historyDisplay.addToDisplay(this.#roundResults(this.currentOperation.resolveOperation()));
+                        this.currentOperation = new Operation(Number.parseFloat(this.historyDisplay.currentDisplay),charButton)
+                        this.historyDisplay.addToDisplay(charButton);
+                        this.inputDisplay.cleanDisplay();
                     }
                 }
                 break;
@@ -116,69 +134,44 @@ class Calculator{
                         this.currentOperation.addSecondOperand(Number.parseFloat(this.inputDisplay.currentDisplay));
                         this.historyDisplay.addToDisplay(this.inputDisplay.currentDisplay);
                         this.inputDisplay.cleanDisplay();
-                        this.inputDisplay.addToDisplay(this.currentOperation.resolveOperation());
+                        this.inputDisplay.addToDisplay(this.#roundResults(this.currentOperation.resolveOperation()));
                         this.inputDisplay.isResult = true;
                         this.currentOperation = undefined;
                     } //TODO controlar longitud de resultados
                 }
                 break;
-            case "0": //controla no añadir 0 a la izquierda
-                if (this.inputDisplay.currentDisplay !== ""){
+            case "0":
+                if (this.inputDisplay.currentDisplay !== "0"){ //no dobles 0 a la izq
                     this.inputDisplay.addToDisplay(charButton);
-                } //TODO: controlar 0 para 0,xxx
+                }
                 break;
             default:
+                if (this.inputDisplay.currentDisplay === "0") this.inputDisplay.deleteLast();
                 this.inputDisplay.addToDisplay(charButton);
                 break;
         }
     }
-}
-
-function miMain(){
-    const currentCalculator = new Calculator("history-display", "input-display", "calculator-button");
-}
-
-
-miMain();
-
-
-// const numberButtons = document.querySelectorAll(".number-button");
-// for (let i = 0; i < numberButtons.length; i++){
-//     numberButtons[i].addEventListener("click", () => numberClicked(numberButtons[i].id));
-// }
-// const operationButtons = document.querySelectorAll(".operation-button");
-// for (let i = 0; i < operationButtons.length; i++){
-//     operationButtons[i].addEventListener("click", () => operationClicked(operationButtons[i].id));
-// }
-/*
-function numberClicked(numberButtonElementID){
-    number = numberButtonElementID[numberButtonElementID.length - 1];
-    switch(number){
-        case "c":
-            inputDisplay.cleanDisplay();
-            historyDisplay.cleanDisplay();
-            break;
-        case "r":
-            inputDisplay.deleteLast()
-            break;
-        case ".":
-            if (inputDisplay.currentDisplay.indexOf(number) === -1){
-                inputDisplay.addToDisplay(number);
+    #roundResults(unroundedResult){
+        let roundedResult; // = unroundedResults;
+        let stringNumber = String(unroundedResult);
+        let integerPart = stringNumber.split(".")[0];
+        let decimalPart = stringNumber.split(".")[1];
+        // let integerPart = String(unroundedResult >= 0 ? Math.floor(unroundedResult) : Math.ceil(unroundedResult));
+        // let decimalPart = String((unroundedResult % 1).toFixed(unroundedResult.length-integerPart.length));
+        if(integerPart.length>10){
+            roundedResult = 0; // si se sale del display, operacion abortada
+            this.historyDisplay.cleanDisplay();
+            this.historyDisplay.addToDisplay("Error:Num too large");
+        }else {
+            if(integerPart.length+decimalPart.length <= 10){
+                roundedResult = unroundedResult;
+            }else {
+                decimalPart = decimalPart.slice(0, (10 - integerPart.length));
+                roundedResult = Number.parseFloat(String(integerPart)+"."+String(decimalPart));
             }
-            break;
-        case "0": //controlar no añadir 0 a la izquierda
-            if (inputDisplay.currentDisplay !== ""){
-                inputDisplay.addToDisplay(number);
-            }
-            break;
-        default:
-            inputDisplay.addToDisplay(number);
+        }
+        return roundedResult;
     }
 }
-function operationClicked(operationButtonElementID){
-    operation = operationButtonElementID[numberButtonElementID.length - 1];
-    switch(operation){
 
-    }
-}
-*/
+const currentCalculator = new Calculator("history-display", "input-display", "calculator-button");
