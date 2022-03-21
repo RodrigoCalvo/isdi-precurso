@@ -153,7 +153,6 @@ const scoreBoard = new ScoreBoard();
 
 function pasapalabra(){
     console.log("Bienvenido a PASAPALABRA");
-    let playerName = window.prompt("Introduce tu nombre de jugador:");
     if (playerName === null) return undefined; //exit on cancel prompt
     const currentGame = new Game(playerName);
     let endGame = false;
@@ -168,7 +167,6 @@ function pasapalabra(){
     console.log(scoreBoard.showScoreBoard());
 }
 
-pasapalabra();
 
 //import questionsAnswersDataBase from "./preguntas.js";
 const questionsAnswersDataBase = [
