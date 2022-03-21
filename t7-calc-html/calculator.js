@@ -156,18 +156,20 @@ class Calculator{
         let stringNumber = String(unroundedResult);
         let integerPart = stringNumber.split(".")[0];
         let decimalPart = stringNumber.split(".")[1];
-        // let integerPart = String(unroundedResult >= 0 ? Math.floor(unroundedResult) : Math.ceil(unroundedResult));
-        // let decimalPart = String((unroundedResult % 1).toFixed(unroundedResult.length-integerPart.length));
-        if(integerPart.length>10){
+        if(integerPart.length > 10){
             roundedResult = 0; // si se sale del display, operacion abortada
             this.historyDisplay.cleanDisplay();
             this.historyDisplay.addToDisplay("Error:Num too large");
         }else {
-            if(integerPart.length+decimalPart.length <= 10){
-                roundedResult = unroundedResult;
+            if (decimalPart !== undefined){
+                if(integerPart.length+decimalPart.length <= 10){
+                    roundedResult = unroundedResult;
+                }else {
+                    decimalPart = decimalPart.slice(0, (10 - integerPart.length));
+                    roundedResult = Number.parseFloat(String(integerPart)+"."+String(decimalPart));
+                }
             }else {
-                decimalPart = decimalPart.slice(0, (10 - integerPart.length));
-                roundedResult = Number.parseFloat(String(integerPart)+"."+String(decimalPart));
+                roundedResult = unroundedResult;
             }
         }
         return roundedResult;
