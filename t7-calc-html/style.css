@@ -24,6 +24,10 @@ td {
 }
 .number-button, .operation-button{
     padding: 17px 27px;
+    text-align: center;
+}
+#button-ac{
+    text-align: left;
 }
 .number-button{
     background-color: rgb(220, 220, 220);
