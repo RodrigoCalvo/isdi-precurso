@@ -1,7 +1,3 @@
-.main-container{
-    display: flex;
-    /* ni idea */
-}
 .question{
     padding: 25px;
 }
@@ -13,4 +9,14 @@
 }
 .question-wrong{
     background-color: rgb(201, 50, 50);
+}
+.send-answer-button{
+    border: solid 1px black;
+    padding: 1px;
+    cursor: pointer;
+}
+.answer-input{
+    border-top: none;
+    border-left: none;
+    border-right: none;
 }

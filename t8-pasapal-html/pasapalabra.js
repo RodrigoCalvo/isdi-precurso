@@ -1,166 +1,3 @@
-class Question {
-    constructor(letter, answer, question) {
-        this.letter = letter;
-        this.answer = answer;
-        this.question = question;
-        this.status = undefined; //true right, false wrong, undefined not answered
-    }
-    tryResolve(answer) {
-        if (this.answer.toUpperCase() === answer.toUpperCase()) {
-            return this.status = true;
-        }else {
-            return this.status = false;
-        }
-    }
-}
-
-class Rosco {
-    constructor (questionsArray){
-        this.questionsArray = questionsArray; //array of Question
-        this.bookmark = 0;
-        this.lastAnswer;
-    }
-    getQuestion(){
-        return this.questionsArray[this.bookmark].question;
-    }
-    getLength(){
-        return this.questionsArray.length;
-    }
-    tryResolveQuestion(answer){
-        let solved = this.questionsArray[this.bookmark].tryResolve(answer);
-        this.lastAnswer = this.questionsArray[this.bookmark].answer;
-        this.#moveBookmark();
-        return solved;
-    }
-    showLastAnswer(){
-        return this.lastAnswer;
-    }
-    skipQuestion(){
-        this.#moveBookmark();
-    }
-    #moveBookmark(){
-        let escapeCount = 0;
-        do{
-            this.bookmark++;
-            if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
-            escapeCount++;
-        }while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length);
-    }
-    getUpdateRosco(){
-        let showRosco = [];
-        for (const question of this.questionsArray) {
-            showRosco.push({letter:(question.letter), status:(question.status)});
-        }
-        return showRosco;
-    }
-}
-
-class Score {
-    constructor(name, score) {
-        this.name = name;
-        this.score = score;
-    }
-    toString() {
-        return this.name + ": " + this.score + " puntos\n";
-    }
-}
-
-class Game {
-    constructor(playerName){
-        this.playerName = playerName;
-        this.currentRosco = new Rosco(this.#autoChooseQuestions());
-        this.answeredQuestions = 0;
-        this.currentScore = 0;
-        this.questionHtmlElements = this.#getHtmlElementsArray("question");
-    }
-    #getHtmlElementsArray(htmlElementsClass){
-        const htmlElementsArray = [];
-        const htmlElementsCollection = document.querySelectorAll("."+htmlElementsClass);
-        for (let i = 0; i < htmlElementsCollection.length; i++){
-            htmlElementsArray[i] = htmlElementsCollection[i];
-        }
-        return htmlElementsArray;
-    }
-    askQuestion(){
-        document.querySelector("#question-output").innerHTML = this.currentRosco.getQuestion();
-    }
-    handleAnswer(){
-        let givenAnswer = document.querySelector("#answer-input").innerHTML
-        let returnedValue; //undefined/true/string
-        if (givenAnswer.toUpperCase() === "PASAPALABRA"){
-            this.currentRosco.skipQuestion();
-            returnedValue = undefined;
-        }
-        if (this.currentRosco.tryResolveQuestion(givenAnswer)===true){
-            this.currentScore++;
-            this.answeredQuestions++;
-            returnedValue = true;
-        }else {
-            this.answeredQuestions++
-            returnedValue = this.currentRosco.showLastAnswer();
-        }
-        this.#updateGameStatus();
-        return returnedValue;
-    }
-    #updateGameStatus(){
-        let updateGameArray = this.currentRosco.getUpdateRosco();
-        for (let i = 0; i < updateGameArray.length; i++){
-            if (updateGameArray[i].status === true){
-                this.questionHtmlElements[i].className = "question question-right";
-            }else if(updateGameArray[i].status === false){
-                this.questionHtmlElements[i].className = "questino question-wrong";
-            }
-        }
-    }
-    endOfGame(){
-        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
-        if (end) scoreBoard.addScore(new Score(this.playerName, this.currentScore));
-        return end;
-    }
-    #autoChooseQuestions(){ //elige preguntas al azar de la bd, una para cada letra
-        const choosedQuestions = [];
-        const abecedary = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-        for (const letterLoop of abecedary){
-            let questionsWithALetter = questionsAnswersDataBase.filter(question => question.letter === letterLoop);
-            choosedQuestions.push(questionsWithALetter[Math.floor(Math.random() * questionsWithALetter.length)]);
-        }
-        const choosedQuestionsObjs = [];
-        for (const chQuestion of choosedQuestions){
-            choosedQuestionsObjs.push(new Question(chQuestion.letter, chQuestion.answer,chQuestion.question));
-        }
-        return choosedQuestionsObjs;
-    }
-}
-
-class ScoreBoard {
-    constructor() {
-        this.scoreBoard = [];
-    }
-    addScore(score){
-        this.scoreBoard.push(score);
-        this.scoreBoard.sort((a, b) => b.score - a.score);
-    };
-    showScoreBoard(){
-        // let stringScores = "";
-        // for (const score of this.scoreBoard){
-        //     stringScores += score.toString();
-        // }
-        // return stringScores;
-    };
-}
-
-const scoreBoard = new ScoreBoard();
-const currentGame = new Game("playerName");
-
-
-do{
-    currentGame.askQuestion()
-    if (enter) currentGame.handleAnswer()
-}while (!currentGame.endOfGame());
-
-
-
-
 //import questionsAnswersDataBase from "./preguntas.js";
 const questionsAnswersDataBase = [
     {letter: "a", answer: "abducir", question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien"},
@@ -241,7 +78,7 @@ const questionsAnswersDataBase = [
     {letter: "u", answer: "utopía", question: "CON LA U. Algo que es bueno y que deseamos pero que es imposible o muy difícil de realizar."},
     {letter: "v", answer: "visera", question: "CON LA V. Parte hacia afuera que tienen las gorras por delante y que sirve para que el sol no nos haga daño en los ojos."},
     {letter: "w", answer: "western", question: "CON LA W. Película del oeste americano."},
-    {letter: "x", answer: "xenófobia", question: "CON LA X. Odio o antipatía hacia los extranjeros."},
+    {letter: "x", answer: "xenofobia", question: "CON LA X. Odio o antipatía hacia los extranjeros."},
     {letter: "y", answer: "yodo", question: "CON LA Y. Elemento químico de color oscuro que se encuentra en el suelo en forma de sales, así como en las algas y otros animales marinos."},
     {letter: "z", answer: "zarzal", question: "CON LA Z. Lugar donde hay muchas zarzas."},
     {letter: "a", answer: "alegre", question: "CON LA A. Sinónimo de contento"},
@@ -258,7 +95,7 @@ const questionsAnswersDataBase = [
     {letter: "l", answer: "librería", question: "CON LA L. Lugar en el que se compran libros"},
     {letter: "m", answer: "mariposa", question: "CON LA M. Insecto con alas grandes y coloridas"},
     {letter: "n", answer: "naranja", question: "CON LA N. Del campo semántico de los colores y el color de una fruta la que podemos hacer zumo"},
-    {letter: "ñ", answer: "niño", question: "CONTIENE LA Ñ. Contiene Persona que tiene pocos años"},
+    {letter: "ñ", answer: "niño", question: "CONTIENE LA Ñ. Persona que tiene pocos años"},
     {letter: "o", answer: "oscuro", question: "CON LA O. El antónimo de claro"},
     {letter: "p", answer: "panadero", question: "CON LA P. ¿Cómo se llama la persona que vende en una panadería?"},
     {letter: "q", answer: "queso", question: "CON LA Q. Producto obtenido de la leche y que gusta mucho a los ratones"},
@@ -271,3 +108,194 @@ const questionsAnswersDataBase = [
     {letter: "x", answer: "xilófono", question: "CON LA X. Instrumento musical formado por láminas de diferentes tamaños, que suenan al golpearlas"},
     {letter: "y", answer: "yegua", question: "CON LA Y. Hembra del caballo"},
     {letter: "z", answer: "zapato", question: "CON LA Z. Calzado que nos ponemos en los pies para caminar"}];
+
+class Question {
+    constructor(letter, answer, question) {
+        this.letter = letter;
+        this.answer = answer;
+        this.question = question;
+        this.status = undefined; //true right, false wrong, undefined not answered
+    }
+    tryResolve(answer) {
+        if (this.answer.toUpperCase() === answer.toUpperCase()) {
+            return this.status = true;
+        }else {
+            return this.status = false;
+        }
+    }
+}
+
+class Rosco {
+    constructor (questionsArray){
+        this.questionsArray = questionsArray; //array of Question
+        this.bookmark = 0;
+        this.lastAnswer;
+    }
+    getQuestion(){
+        return this.questionsArray[this.bookmark].question;
+    }
+    getLength(){
+        return this.questionsArray.length;
+    }
+    tryResolveQuestion(answer){
+        let solved = this.questionsArray[this.bookmark].tryResolve(answer);
+        this.lastAnswer = this.questionsArray[this.bookmark].answer;
+        this.#moveBookmark();
+        return solved;
+    }
+    showLastAnswer(){
+        return this.lastAnswer;
+    }
+    skipQuestion(){
+        this.#moveBookmark();
+    }
+    #moveBookmark(){
+        let escapeCount = 0;
+        do{
+            this.bookmark++;
+            if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
+            escapeCount++;
+        }while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length);
+    }
+    getUpdateRosco(){
+        let showRosco = [];
+        for (const question of this.questionsArray) {
+            showRosco.push({letter:(question.letter), status:(question.status)});
+        }
+        return showRosco;
+    }
+}
+
+class Score {
+    constructor(name, score) {
+        this.name = name;
+        this.score = score;
+    }
+    toString() {
+        return this.name + ": " + this.score + " puntos";
+    }
+}
+
+class Game {
+    constructor(playerName){
+        this.playerName = playerName;
+        this.currentRosco = new Rosco(this.#autoChooseQuestions());
+        this.answeredQuestions = 0;
+        this.currentScore = 0;
+        this.questionHtmlElements = this.#getHtmlElementsArray("question");
+    }
+    #getHtmlElementsArray(htmlElementsClass){
+        const htmlElementsArray = [];
+        const htmlElementsCollection = document.querySelectorAll("."+htmlElementsClass);
+        for (let i = 0; i < htmlElementsCollection.length; i++){
+            htmlElementsArray[i] = htmlElementsCollection[i];
+        }
+        return htmlElementsArray;
+    }
+    askQuestion(){
+        document.querySelector("#question-output").innerHTML = this.currentRosco.getQuestion();
+    }
+    handleAnswer(){
+        let givenAnswer = document.querySelector("#answer-input").value;
+        let returnedValue; //undefined/true/string
+        if (givenAnswer.toUpperCase() === "PASAPALABRA"){
+            this.currentRosco.skipQuestion();
+            returnedValue = undefined;
+        }else if (this.currentRosco.tryResolveQuestion(givenAnswer)===true){
+            this.currentScore++;
+            this.answeredQuestions++;
+            returnedValue = true;
+        }else {
+            this.answeredQuestions++
+            returnedValue = this.currentRosco.showLastAnswer();
+        }
+        this.#updateGameStatus();
+        return returnedValue;
+    }
+    #updateGameStatus(){
+        let updateGameArray = this.currentRosco.getUpdateRosco();
+        for (let i = 0; i < updateGameArray.length; i++){
+            if (updateGameArray[i].status === true){
+                this.questionHtmlElements[i].className = "question question-right";
+            }else if(updateGameArray[i].status === false){
+                this.questionHtmlElements[i].className = "question question-wrong";
+            }
+        }
+    }
+    endOfGame(){
+        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
+        if (end) scoreBoard.addScore(new Score(this.playerName, this.currentScore));
+        return end;
+    }
+    #autoChooseQuestions(){ //elige preguntas al azar de la bd, una para cada letra
+        const choosedQuestions = [];
+        const abecedary = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+        for (const letterLoop of abecedary){
+            let questionsWithALetter = questionsAnswersDataBase.filter(question => question.letter === letterLoop);
+            choosedQuestions.push(questionsWithALetter[Math.floor(Math.random() * questionsWithALetter.length)]);
+        }
+        const choosedQuestionsObjs = [];
+        for (const chQuestion of choosedQuestions){
+            choosedQuestionsObjs.push(new Question(chQuestion.letter, chQuestion.answer,chQuestion.question));
+        }
+        return choosedQuestionsObjs;
+    }
+}
+
+class ScoreBoard {
+    constructor() {
+        this.scoreBoard = [];
+        this.addScore(new Score("Jacinto", 13));
+    }
+    addScore(score){
+        this.scoreBoard.push(score);
+        this.scoreBoard.sort((a, b) => b.score - a.score);
+        this.#updateScoreBoard();
+    };
+    #updateScoreBoard(){
+        let scoreboardList = document.querySelector("#scoreboard-list");
+        let scoresListString = "";
+        for (const score of this.scoreBoard){
+            scoresListString += `<li>${score.name}: ${score.score} puntos</li>`;
+        }
+        scoreboardList.innerHTML = scoresListString;
+    };
+}
+const scoreBoard = new ScoreBoard();
+
+function lanzarJuego(playerName){
+    const currentGame = new Game(playerName);
+    currentGame.askQuestion();
+
+    const answerInput = document.querySelector("#answer-input");
+    answerInput.addEventListener("keyup", sendAnswer);
+    document.querySelector("#send-answer-button").addEventListener("click", sendAnswer);
+
+    function sendAnswer(event){
+        if ( event instanceof PointerEvent || event.code === "Enter"){
+            let answerCheck = currentGame.handleAnswer();
+            answerInput.value = "";
+            answerInput.focus();
+            let answerOutput = document.querySelector("#answer-output");
+            if(answerCheck === true){
+                answerOutput.innerHTML = "Respuesta correcta!";
+            }else if(answerCheck === undefined){
+                answerOutput.innerHTML = "Pregunta pasada";
+            }else {
+                answerOutput.innerHTML =  "Incorrecto, la respuesta era "+answerCheck;
+            }
+            if (!currentGame.endOfGame()){
+                currentGame.askQuestion();
+            }else {
+                answerInput.removeEventListener("keyup", sendAnswer);
+                document.querySelector("#question-output").innerHTML = "Fin del juego.";
+                answerOutput.innerHTML = "Bye!";
+            } 
+        }
+    }
+
+}
+
+lanzarJuego("Jugador");
+
+
