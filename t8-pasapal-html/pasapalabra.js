@@ -127,7 +127,7 @@ class Question {
 
 class Rosco {
     constructor (questionsArray){
-        this.questionsArray = questionsArray; //array of Question
+        this.questionsArray = questionsArray; //array of {Question}
         this.bookmark = 0;
         this.lastAnswer;
     }
@@ -149,20 +149,20 @@ class Rosco {
     skipQuestion(){
         this.#moveBookmark();
     }
-    #moveBookmark(){
-        let escapeCount = 0;
-        do{
-            this.bookmark++;
-            if (this.bookmark === this.questionsArray.length) this.bookmark = 0; //vuelta
-            escapeCount++;
-        }while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length);
-    }
     getUpdateRosco(){
         let showRosco = [];
         for (const question of this.questionsArray) {
             showRosco.push({letter:(question.letter), status:(question.status)});
         }
-        return showRosco;
+        return showRosco; //array of {letter, status}
+    }
+    #moveBookmark(){
+        let escapeCount = 0;
+        do{
+            this.bookmark++;
+            if (this.bookmark === this.questionsArray.length) this.bookmark = 0;
+            escapeCount++;
+        }while (this.questionsArray[this.bookmark].status != undefined && escapeCount < this.questionsArray.length);
     }
 }
 
@@ -170,75 +170,6 @@ class Score {
     constructor(name, score) {
         this.name = name;
         this.score = score;
-    }
-    toString() {
-        return this.name + ": " + this.score + " puntos";
-    }
-}
-
-class Game {
-    constructor(playerName){
-        this.playerName = playerName;
-        this.currentRosco = new Rosco(this.#autoChooseQuestions());
-        this.answeredQuestions = 0;
-        this.currentScore = 0;
-        this.questionHtmlElements = this.#getHtmlElementsArray("question");
-    }
-    #getHtmlElementsArray(htmlElementsClass){
-        const htmlElementsArray = [];
-        const htmlElementsCollection = document.querySelectorAll("."+htmlElementsClass);
-        for (let i = 0; i < htmlElementsCollection.length; i++){
-            htmlElementsArray[i] = htmlElementsCollection[i];
-        }
-        return htmlElementsArray;
-    }
-    askQuestion(){
-        document.querySelector("#question-output").innerHTML = this.currentRosco.getQuestion();
-    }
-    handleAnswer(){
-        let givenAnswer = document.querySelector("#answer-input").value;
-        let returnedValue; //undefined/true/string
-        if (givenAnswer.toUpperCase() === "PASAPALABRA"){
-            this.currentRosco.skipQuestion();
-            returnedValue = undefined;
-        }else if (this.currentRosco.tryResolveQuestion(givenAnswer)===true){
-            this.currentScore++;
-            this.answeredQuestions++;
-            returnedValue = true;
-        }else {
-            this.answeredQuestions++
-            returnedValue = this.currentRosco.showLastAnswer();
-        }
-        this.#updateGameStatus();
-        return returnedValue;
-    }
-    #updateGameStatus(){
-        let updateGameArray = this.currentRosco.getUpdateRosco();
-        for (let i = 0; i < updateGameArray.length; i++){
-            if (updateGameArray[i].status === true){
-                this.questionHtmlElements[i].className = "question question-right";
-            }else if(updateGameArray[i].status === false){
-                this.questionHtmlElements[i].className = "question question-wrong";
-            }
-        }
-    }
-    endOfGame(){
-        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
-        if (end) scoreBoard.addScore(new Score(this.playerName, this.currentScore));
-        return end;
-    }
-    #autoChooseQuestions(){ //elige preguntas al azar de la bd, una para cada letra
-        const choosedQuestions = [];
-        const abecedary = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-        for (const letterLoop of abecedary){
-            let questionsWithALetter = questionsAnswersDataBase.filter(question => question.letter === letterLoop);
-            choosedQuestions.push(questionsWithALetter[Math.floor(Math.random() * questionsWithALetter.length)]);
-        }
-        const choosedQuestionsObjs = [];
-        for (const chQuestion of choosedQuestions){
-            choosedQuestionsObjs.push(new Question(chQuestion.letter, chQuestion.answer,chQuestion.question));
-        }
-        return choosedQuestionsObjs;
     }
 }
 
@@ -253,49 +184,109 @@ class ScoreBoard {
         this.#updateScoreBoard();
     };
     #updateScoreBoard(){
-        let scoreboardList = document.querySelector("#scoreboard-list");
         let scoresListString = "";
         for (const score of this.scoreBoard){
             scoresListString += `<li>${score.name}: ${score.score} puntos</li>`;
         }
-        scoreboardList.innerHTML = scoresListString;
+        document.querySelector("#scoreboard-list").innerHTML = scoresListString;
     };
 }
-const scoreBoard = new ScoreBoard();
 
-function lanzarJuego(playerName){
-    const currentGame = new Game(playerName);
-    currentGame.askQuestion();
-
-    const answerInput = document.querySelector("#answer-input");
-    answerInput.addEventListener("keyup", sendAnswer);
-    document.querySelector("#send-answer-button").addEventListener("click", sendAnswer);
-
-    function sendAnswer(event){
-        if ( event instanceof PointerEvent || event.code === "Enter"){
-            let answerCheck = currentGame.handleAnswer();
-            answerInput.value = "";
-            answerInput.focus();
-            let answerOutput = document.querySelector("#answer-output");
-            if(answerCheck === true){
-                answerOutput.innerHTML = "Respuesta correcta!";
-            }else if(answerCheck === undefined){
-                answerOutput.innerHTML = "Pregunta pasada";
+class Game {
+    constructor(playerName){
+        this.playerName = playerName;
+        this.currentRosco = new Rosco(this.#pickRandomQuestions());
+        this.answeredQuestions = 0;
+        this.currentScore = 0;
+    }
+    start(){
+        document.querySelector("#answer-input").addEventListener("keydown", this);
+        document.querySelector("#send-answer-button").addEventListener("click", this);
+        document.querySelector("#pasapalabra-button").addEventListener("click", this);
+        this.#askQuestion();
+    }
+    handleEvent(event){ //getPlayerAnswer
+        if (event.target.id === "send-answer-button" || event.code === "Enter"){
+            if(document.querySelector("#answer-input").value !== ""){
+                this.#replyAnswerToPlayer(this.#handleAnswer(false));
+                document.querySelector("#answer-input").value = "";
+                document.querySelector("#answer-input").focus();
             }else {
-                answerOutput.innerHTML =  "Incorrecto, la respuesta era "+answerCheck;
+                this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
             }
-            if (!currentGame.endOfGame()){
-                currentGame.askQuestion();
-            }else {
-                answerInput.removeEventListener("keyup", sendAnswer);
-                document.querySelector("#question-output").innerHTML = "Fin del juego.";
-                answerOutput.innerHTML = "Bye!";
-            } 
+        }else if (event.target.id === "pasapalabra-button" || event.code === "Space"){
+            this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
         }
     }
-
+    #askQuestion(){
+        document.querySelector("#question-output").innerHTML = this.currentRosco.getQuestion();
+    }
+    #handleAnswer(pasapalabra){
+        let givenAnswer = document.querySelector("#answer-input").value;
+        let returnedValue; //undefined/true/string
+        if (givenAnswer.toUpperCase() === "PASAPALABRA" || pasapalabra){
+            this.currentRosco.skipQuestion();
+            returnedValue = undefined;
+        }else if (this.currentRosco.tryResolveQuestion(givenAnswer)===true){
+            this.currentScore++;
+            this.answeredQuestions++;
+            returnedValue = true;
+        }else {
+            this.answeredQuestions++
+            returnedValue = this.currentRosco.showLastAnswer();
+        }
+        this.#updateGameStatus();
+        return returnedValue;
+    }
+    #replyAnswerToPlayer(playerAnswer){
+        let answerOutput = document.querySelector("#answer-output");
+        if(playerAnswer === true){
+            answerOutput.innerHTML = "¡Respuesta correcta!";
+        }else if(playerAnswer === undefined){
+            answerOutput.innerHTML = "¡Pregunta pasada!";
+        }else {
+            answerOutput.innerHTML =  `¡Incorrecto, la respuesta era ${playerAnswer}!`;
+        }
+        this.#endOfGame();
+    }
+    #endOfGame(){
+        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
+        if (end){
+            scoreBoard.addScore(new Score(this.playerName, this.currentScore));
+            document.querySelector("#answer-input").removeEventListener("keydown", this);
+            document.querySelector("#send-answer-button").removeEventListener("click", this);
+            document.querySelector("#pasapalabra-button").removeEventListener("click", this);
+            document.querySelector("#question-output").innerHTML = "Fin del juego.";
+            document.querySelector("#answer-output").innerHTML = "Bye!";
+        }else {
+            this.#askQuestion();        
+        }
+        return end;
+    }
+    #pickRandomQuestions(){ //elige preguntas al azar de la bd, una para cada letra
+        const choosedQuestionsObjs = [];
+        const abecedary = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "ñ", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+        for (const letterLoop of abecedary){
+            let questionsWithALetter = questionsAnswersDataBase.filter(question => question.letter === letterLoop);
+            let choosedQuestion = questionsWithALetter[Math.floor(Math.random() * questionsWithALetter.length)];
+            choosedQuestionsObjs.push(new Question(choosedQuestion.letter, choosedQuestion.answer, choosedQuestion.question));
+        }
+        return choosedQuestionsObjs;
+    }
+    #updateGameStatus(){
+        let updateGameArray = this.currentRosco.getUpdateRosco();
+        let questionHtmlElements = document.querySelectorAll(".question");
+        for (let i = 0; i < updateGameArray.length; i++){
+            if (updateGameArray[i].status === true){
+                questionHtmlElements[i].className = "question question-right";
+            }else if(updateGameArray[i].status === false){
+                questionHtmlElements[i].className = "question question-wrong";
+            }
+        }
+    }
 }
 
-lanzarJuego("Jugador");
 
-
+const scoreBoard = new ScoreBoard();
+const currentGame = new Game("Jugador"); //TODO pedir nombre
+currentGame.start();
