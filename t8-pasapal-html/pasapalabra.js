@@ -194,6 +194,7 @@ class ScoreBoard {
 
 class Game {
     constructor(playerName){
+        if (playerName === "") playerName = "Anónimo";
         this.playerName = playerName;
         this.currentRosco = new Rosco(this.#pickRandomQuestions());
         this.answeredQuestions = 0;
@@ -247,7 +248,7 @@ class Game {
         }else if(playerAnswer === undefined){
             answerOutput.innerHTML = "¡Pregunta pasada!";
         }else {
-            answerOutput.innerHTML =  `¡Incorrecto, la respuesta era ${playerAnswer}!`;
+            answerOutput.innerHTML =  `¡Incorrecto, la respuesta era ${playerAnswer.toUpperCase()}!`;
         }
         this.#endOfGame();
     }
@@ -295,8 +296,8 @@ class Game {
 const scoreBoard = new ScoreBoard();
 
 /* esto se puede trasladar al html tras la maquetación */
-// document.querySelector(".game").setAttribute("hidden", true);
-// document.querySelector("#replay-button").setAttribute("hidden", true);
+document.querySelector(".game").setAttribute("hidden", true);
+document.querySelector("#replay-button").setAttribute("hidden", true);
 
 document.querySelector("#play-button").addEventListener("click", () => {
     document.querySelector(".interface").setAttribute("hidden", true);
@@ -314,3 +315,4 @@ document.querySelector("#replay-button").addEventListener("click", () => {
 
 //TODO aceptar END?
 //TODO timer
+//esconder reply-answer-container hasta que se necesite

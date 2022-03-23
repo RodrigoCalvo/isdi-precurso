@@ -1,22 +1,131 @@
-* {
-    /* temporal */
-    max-width: 37rem;
+body {
+    background-color: black;
+    color: #84c754;
+    font-family: "Anton", Arial, sans-serif;
+    max-width: 37rem; /* temporal, es el ancho del grid de preguntas*/
+    margin: auto;
+    text-align: justify;
 }
+h1{
+    text-transform: uppercase;
+    font-family: "Audiowide", Arial, sans-serif;
+    font-size: 3.5rem;
+    text-align: center;
+}
+h3{
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 0.2rem;
+}
+.info p{
+    text-indent: 2rem;
+}
+.input-player-name{
+    vertical-align: text-top;
+    font-family: "Anton", Arial, sans-serif;
+}
+.player-data{
+    display: flex;
+    justify-content: space-between;
+}
+#play-button{
+    display: block;
+    margin: 2.3rem auto;
+    width: 14rem;
+    height: 4rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-family: "Audiowide", Arial, sans-serif;
+    background-color: #000;
+    color: #84c754;
+    cursor: pointer;
+}
+/* .rosco{
+    position: relative;
+    list-style: none;
+    border: 1px solid white;
+    border-radius: 50%;
+    height: 15rem;
+}
+.rosco div{
+    position: absolute;
+} */
 .question{
-    border-radius: 100%;
+    border-radius: 50%;
     width: 4rem;
     height: 4rem;
     text-align: center;
+    font-size: 1.5rem;
+    text-shadow: 1px 1px 3px black;
 }
 .question-unanswered{
-    background-color: rgb(190, 190, 190, 0.7);
+    background: radial-gradient(circle at 33% 33%, rgb(190, 190, 190) 0%, rgb(0, 0, 0) 85%, black 100%);
 }
+
 .question-right{
-    background-color: rgb(100, 224, 75);
+    background: radial-gradient(circle at 1rem 1rem, rgb(43, 133, 25) 0%, rgb(0, 0, 0) 85%, black 100%);
 }
 .question-wrong{
-    background-color: rgb(201, 50, 50, 0.95);
+    background: radial-gradient(circle at 1rem 1rem, rgb(179, 49, 49) 0%, rgb(0, 0, 0) 85%, black 100%);
+}
+.question-output{
+    padding-top: 2rem;
+    font-size: 1.7rem;
+    text-align: center;
+}
+.answer-container{
+    display: flex;
+    justify-content: center;
 }
 .answer-input{
-    border-style: none none solid;
+    font-size: 2rem;
+    margin: 10px 5px 20px;
+    font-family: "Anton", Arial, sans-serif;
+    text-align: center;
+}
+
+.answer-output{
+    font-size: 2rem;
+    text-align: center;
+    padding: 1rem 0;
+    /* border: solid 1px red; */
+}
+.send-answer-button{
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-family: "Audiowide", Arial, sans-serif;
+    background-color: #000;
+    color: #84c754;
+    cursor: pointer;
+}
+.pasapalabra-button{
+    padding: 1rem 2rem;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-family: "Audiowide", Arial, sans-serif;
+    background-color: #000;
+    color: #84c754;
+    cursor: pointer;
+}
+.buttons-container{
+    display: flex;
+    justify-content: space-around;
+}
+.scoreboard-container{
+    margin: 20px 0px;
+}
+.replay-container{
+    display: flex;
+    justify-content: center;
+}
+#replay-button{
+    padding: 1rem 2rem;
+    margin: 2.3rem auto;
+    font-size: 2rem;
+    text-transform: uppercase;
+    font-family: "Audiowide", Arial, sans-serif;
+    background-color: #000;
+    color: #84c754;
+    cursor: pointer;
 }

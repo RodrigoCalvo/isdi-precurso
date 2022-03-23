@@ -5,6 +5,8 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Pasapalabra</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Audiowide">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton">
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
@@ -12,18 +14,88 @@
             <h1>Pasapalabra</h1>
             <section class="interface">
                 <div class="info">
-                    <p class="info-description">Descripción del juego</p>
-                    <p class="info-instructions">Instrucciones: Pulsar enter o el botón enviar envía la respuesta. Escribir Pasapalabra, enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta.</p>
+                    <h3>Descripción del juego:</h3>
+                    <p>El jugador debe adivinar, dentro del tiempo establecido, 27 palabras diferentes, cada una con una letra del alfabeto, contando para ello con una definición corta y como pista que empieza o contienen por la letra en la que se encuentre el jugador en ese momento.</p>
+                    <h3>Instrucciones:</h3>
+                    <p class="info-instructions">Pulsar enter o el botón Enviar confirma la respuesta. Escribir "pasapalabra", enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta. Las preguntas saltadas volverán a aparecer al finalizar el recorrido por el alfabeto. Se puede escribir en mayúsculas o minúsculas indistintamente, pero se deben respetar las tildes.</p>
                 </div>
-                <div class="player-data">
-                    <h3 class="player-data-head">Datos de jugador:</h3>
-                    Nombre: <input type="text" name="Nombre" class="input-player-name" id="input-player-name">
-                    Jugar con temporizador <input type="checkbox" id="boolean-timer">
+                <div>
+                    <h3>Datos de jugador:</h3>
+                    <p class="player-data">
+                        <span>Nombre: <input type="text" class="input-player-name" id="input-player-name"></span>
+                        <span><input type="checkbox" id="boolean-timer"> Jugar con temporizador</span>
+                    </p>
                     <input type="button" value="Jugar" id="play-button">
+                </div>
+                <div class="scoreboard-container">
+                    <details>
+                        <summary>Puntuaciones</summary>
+                        <ul class="scoreboard-list" id="scoreboard-list">
+                        </ul>
+
+                    </details>
                 </div>
             </section>
             <section class="game">
                 <div class="rosco-container">
+                    <!-- <div class="rosco">
+                        <div class="question question-unanswered">A</div>
+                        <div class="question question-unanswered">B</div>
+                        <div class="question question-unanswered">C</div>
+                        <div class="question question-unanswered">D</div>
+                        <div class="question question-unanswered">E</div>
+                        <div class="question question-unanswered">F</div>
+                        <div class="question question-unanswered">G</div>
+                        <div class="question question-unanswered">H</div>
+                        <div class="question question-unanswered">I</div>
+                        <div class="question question-unanswered">J</div>
+                        <div class="question question-unanswered">K</div>
+                        <div class="question question-unanswered">L</div>
+                        <div class="question question-unanswered">M</div>
+                        <div class="question question-unanswered">N</div>
+                        <div class="question question-unanswered">Ñ</div>
+                        <div class="question question-unanswered">O</div>
+                        <div class="question question-unanswered">P</div>
+                        <div class="question question-unanswered">Q</div>
+                        <div class="question question-unanswered">R</div>
+                        <div class="question question-unanswered">S</div>
+                        <div class="question question-unanswered">T</div>
+                        <div class="question question-unanswered">U</div>
+                        <div class="question question-unanswered">V</div>
+                        <div class="question question-unanswered">W</div>
+                        <div class="question question-unanswered">X</div>
+                        <div class="question question-unanswered">Y</div>
+                        <div class="question question-unanswered">Z</div>
+                    </div> -->
+                    <!-- <ul class="rosco">
+                        <li class="question question-unanswered">A</li>
+                        <li class="question question-unanswered">B</li>
+                        <li class="question question-unanswered">C</li>
+                        <li class="question question-unanswered">D</li>
+                        <li class="question question-unanswered">E</li>
+                        <li class="question question-unanswered">F</li>
+                        <li class="question question-unanswered">G</li>
+                        <li class="question question-unanswered">H</li>
+                        <li class="question question-unanswered">I</li>
+                        <li class="question question-unanswered">J</li>
+                        <li class="question question-unanswered">K</li>
+                        <li class="question question-unanswered">L</li>
+                        <li class="question question-unanswered">M</li>
+                        <li class="question question-unanswered">N</li>
+                        <li class="question question-unanswered">Ñ</li>
+                        <li class="question question-unanswered">O</li>
+                        <li class="question question-unanswered">P</li>
+                        <li class="question question-unanswered">Q</li>
+                        <li class="question question-unanswered">R</li>
+                        <li class="question question-unanswered">S</li>
+                        <li class="question question-unanswered">T</li>
+                        <li class="question question-unanswered">U</li>
+                        <li class="question question-unanswered">V</li>
+                        <li class="question question-unanswered">W</li>
+                        <li class="question question-unanswered">X</li>
+                        <li class="question question-unanswered">Y</li>
+                        <li class="question question-unanswered">Z</li>
+                    </ul> -->
                     <table>
                         <tr>
                             <td class="question question-unanswered" id="question-a">A</td>
@@ -64,23 +136,18 @@
                     <p class="question-output" id="question-output">Aqui estamos preguntando</p>
                 </div>
                 <div class="answer-container">
-                    <input type="text" class="answer-input" id="answer-input">
-                    <input type="button" value="Enviar" class="send-answer-button" id="send-answer-button">
-                    <input type="button" value="Pasapalabra" class="pasapalabra-button" id="pasapalabra-button">
+                    <span>&gt;<input type="text" class="answer-input" id="answer-input">&lt;</span>
                 </div>
                 <div class="reply-answer-container">
                     <p class="answer-output" id="answer-output"></p>
                 </div>
-                <div class="scoreboard-container">
-                    <details>
-                        <summary>Puntuaciones</summary>
-                        <ul class="scoreboard-list" id="scoreboard-list">
-                        </ul>
-
-                    </details>
+                <div class="buttons-container">
+                    <input type="button" value="Enviar" class="send-answer-button" id="send-answer-button">
+                    <input type="button" value="Pasapalabra" class="pasapalabra-button" id="pasapalabra-button">
                 </div>
-                <div>
-                    <input type="button" value="Jugar de nuevo" id="replay-button">
+                
+                <div class="replay-container">
+                    <div><input type="button" value="Jugar de nuevo" id="replay-button"></div>
                 </div>
             </section>
         </div>
