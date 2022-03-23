@@ -10,58 +10,75 @@
     <body>
         <h1>Pasapalabra</h1>
         <div class="main-container">
-            <div class="rosco-container">
-                <table>
-                    <tr>
-                        <td class="question question-unanswered" id="question-a">A</td>
-                        <td class="question question-unanswered" id="question-b">B</td>
-                        <td class="question question-unanswered" id="question-c">C</td>
-                        <td class="question question-unanswered" id="question-d">D</td>
-                        <td class="question question-unanswered" id="question-e">E</td>
-                        <td class="question question-unanswered" id="question-f">F</td>
-                        <td class="question question-unanswered" id="question-g">G</td>
-                        <td class="question question-unanswered" id="question-h">H</td>
-                        <td class="question question-unanswered" id="question-i">I</td>
-                    </tr>
-                    <tr>
-                        <td class="question question-unanswered" id="question-j">J</td>
-                        <td class="question question-unanswered" id="question-k">K</td>
-                        <td class="question question-unanswered" id="question-l">L</td>
-                        <td class="question question-unanswered" id="question-m">M</td>
-                        <td class="question question-unanswered" id="question-n">N</td>
-                        <td class="question question-unanswered" id="question-ñ">Ñ</td>
-                        <td class="question question-unanswered" id="question-o">O</td>
-                        <td class="question question-unanswered" id="question-p">P</td>
-                        <td class="question question-unanswered" id="question-q">Q</td>
-                    </tr>
-                    <tr>
-                        <td class="question question-unanswered" id="question-r">R</td>
-                        <td class="question question-unanswered" id="question-s">S</td>
-                        <td class="question question-unanswered" id="question-t">T</td>
-                        <td class="question question-unanswered" id="question-u">U</td>
-                        <td class="question question-unanswered" id="question-v">V</td>
-                        <td class="question question-unanswered" id="question-w">W</td>
-                        <td class="question question-unanswered" id="question-x">X</td>
-                        <td class="question question-unanswered" id="question-y">Y</td>
-                        <td class="question question-unanswered" id="question-z">Z</td>
-                    </tr>
-                </table>
-            </div>
-            <div class="question-answer-container">
-                <p class="question-output" id="question-output">Aqui estamos preguntando</p>
-                <input type="text" class="answer-input" id="answer-input">
-                <input type="button" value="Enviar" class="send-answer-button" id="send-answer-button">
-                <input type="button" value="Pasapalabra" class="pasapalabra-button" id="pasapalabra-button">
-                <p class="answer-output" id="answer-output"></p>
-            </div>
-            <div class="scoreboard-container">
-                <details>
-                    <summary>Puntuaciones</summary>
-                    <ul class="scoreboard-list" id="scoreboard-list">
-                    </ul>
+            <section class="interface">
+                <div>
+                    <p>Descripción del juego</p>
+                    <p>Instrucciones</p>
+                </div>
+                <div>
+                    <p>Datos de jugador:</p>
+                    Nombre: <input type="text" name="Nombre" class="input-player-name" id="input-player-name">
+                    Jugar con temporizador <input type="checkbox" id="boolean-timer">
+                    <input type="button" value="Jugar" id="play-button">
+                </div>
+            </section>
+            <section class="game" hidden>
+                <div class="rosco-container">
+                    <table>
+                        <tr>
+                            <td class="question question-unanswered" id="question-a">A</td>
+                            <td class="question question-unanswered" id="question-b">B</td>
+                            <td class="question question-unanswered" id="question-c">C</td>
+                            <td class="question question-unanswered" id="question-d">D</td>
+                            <td class="question question-unanswered" id="question-e">E</td>
+                            <td class="question question-unanswered" id="question-f">F</td>
+                            <td class="question question-unanswered" id="question-g">G</td>
+                            <td class="question question-unanswered" id="question-h">H</td>
+                            <td class="question question-unanswered" id="question-i">I</td>
+                        </tr>
+                        <tr>
+                            <td class="question question-unanswered" id="question-j">J</td>
+                            <td class="question question-unanswered" id="question-k">K</td>
+                            <td class="question question-unanswered" id="question-l">L</td>
+                            <td class="question question-unanswered" id="question-m">M</td>
+                            <td class="question question-unanswered" id="question-n">N</td>
+                            <td class="question question-unanswered" id="question-ñ">Ñ</td>
+                            <td class="question question-unanswered" id="question-o">O</td>
+                            <td class="question question-unanswered" id="question-p">P</td>
+                            <td class="question question-unanswered" id="question-q">Q</td>
+                        </tr>
+                        <tr>
+                            <td class="question question-unanswered" id="question-r">R</td>
+                            <td class="question question-unanswered" id="question-s">S</td>
+                            <td class="question question-unanswered" id="question-t">T</td>
+                            <td class="question question-unanswered" id="question-u">U</td>
+                            <td class="question question-unanswered" id="question-v">V</td>
+                            <td class="question question-unanswered" id="question-w">W</td>
+                            <td class="question question-unanswered" id="question-x">X</td>
+                            <td class="question question-unanswered" id="question-y">Y</td>
+                            <td class="question question-unanswered" id="question-z">Z</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="question-answer-container">
+                    <p class="question-output" id="question-output">Aqui estamos preguntando</p>
+                    <input type="text" class="answer-input" id="answer-input">
+                    <input type="button" value="Enviar" class="send-answer-button" id="send-answer-button">
+                    <input type="button" value="Pasapalabra" class="pasapalabra-button" id="pasapalabra-button">
+                    <p class="answer-output" id="answer-output"></p>
+                </div>
+                <div class="scoreboard-container">
+                    <details>
+                        <summary>Puntuaciones</summary>
+                        <ul class="scoreboard-list" id="scoreboard-list">
+                        </ul>
 
-                </details>
-            </div>
+                    </details>
+                </div>
+                <div>
+                    <input type="button" value="Jugar de nuevo" id="replay-button" hidden>
+                </div>
+            </section>
         </div>
         <script src="./pasapalabra.js"></script>
     </body>
