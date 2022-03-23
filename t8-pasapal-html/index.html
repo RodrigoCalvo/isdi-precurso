@@ -8,21 +8,21 @@
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
-        <h1>Pasapalabra</h1>
         <div class="main-container">
+            <h1>Pasapalabra</h1>
             <section class="interface">
-                <div>
-                    <p>Descripción del juego</p>
-                    <p>Instrucciones</p>
+                <div class="info">
+                    <p class="info-description">Descripción del juego</p>
+                    <p class="info-instructions">Instrucciones: Pulsar enter o el botón enviar envía la respuesta. Escribir Pasapalabra, enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta.</p>
                 </div>
-                <div>
-                    <p>Datos de jugador:</p>
+                <div class="player-data">
+                    <h3 class="player-data-head">Datos de jugador:</h3>
                     Nombre: <input type="text" name="Nombre" class="input-player-name" id="input-player-name">
                     Jugar con temporizador <input type="checkbox" id="boolean-timer">
                     <input type="button" value="Jugar" id="play-button">
                 </div>
             </section>
-            <section class="game" hidden>
+            <section class="game">
                 <div class="rosco-container">
                     <table>
                         <tr>
@@ -60,11 +60,15 @@
                         </tr>
                     </table>
                 </div>
-                <div class="question-answer-container">
+                <div class="question-container">
                     <p class="question-output" id="question-output">Aqui estamos preguntando</p>
+                </div>
+                <div class="answer-container">
                     <input type="text" class="answer-input" id="answer-input">
                     <input type="button" value="Enviar" class="send-answer-button" id="send-answer-button">
                     <input type="button" value="Pasapalabra" class="pasapalabra-button" id="pasapalabra-button">
+                </div>
+                <div class="reply-answer-container">
                     <p class="answer-output" id="answer-output"></p>
                 </div>
                 <div class="scoreboard-container">
@@ -76,7 +80,7 @@
                     </details>
                 </div>
                 <div>
-                    <input type="button" value="Jugar de nuevo" id="replay-button" hidden>
+                    <input type="button" value="Jugar de nuevo" id="replay-button">
                 </div>
             </section>
         </div>

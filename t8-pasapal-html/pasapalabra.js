@@ -294,6 +294,10 @@ class Game {
 
 const scoreBoard = new ScoreBoard();
 
+/* esto se puede trasladar al html tras la maquetación */
+// document.querySelector(".game").setAttribute("hidden", true);
+// document.querySelector("#replay-button").setAttribute("hidden", true);
+
 document.querySelector("#play-button").addEventListener("click", () => {
     document.querySelector(".interface").setAttribute("hidden", true);
     document.querySelector(".game").removeAttribute("hidden");
@@ -307,3 +311,6 @@ document.querySelector("#replay-button").addEventListener("click", () => {
     document.querySelector("#replay-button").setAttribute("hidden", true);
     document.querySelector(".interface").removeAttribute("hidden");
 });
+
+//TODO aceptar END?
+//TODO timer

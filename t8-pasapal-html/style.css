@@ -1,22 +1,22 @@
+* {
+    /* temporal */
+    max-width: 37rem;
+}
 .question{
-    padding: 25px;
+    border-radius: 100%;
+    width: 4rem;
+    height: 4rem;
+    text-align: center;
 }
 .question-unanswered{
-    background-color: rgb(190, 190, 190);
+    background-color: rgb(190, 190, 190, 0.7);
 }
 .question-right{
     background-color: rgb(100, 224, 75);
 }
 .question-wrong{
-    background-color: rgb(201, 50, 50);
-}
-.send-answer-button{
-    border: solid 1px black;
-    padding: 1px;
-    cursor: pointer;
+    background-color: rgb(201, 50, 50, 0.95);
 }
 .answer-input{
-    border-top: none;
-    border-left: none;
-    border-right: none;
+    border-style: none none solid;
 }
