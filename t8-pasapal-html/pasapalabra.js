@@ -203,6 +203,8 @@ class Game {
         document.querySelector("#answer-input").addEventListener("keydown", this);
         document.querySelector("#send-answer-button").addEventListener("click", this);
         document.querySelector("#pasapalabra-button").addEventListener("click", this);
+        document.querySelector("#answer-input").value = "";
+        this.#updateGameStatus();
         this.#askQuestion();
     }
     handleEvent(event){ //getPlayerAnswer
@@ -214,7 +216,7 @@ class Game {
             }else {
                 this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
             }
-        }else if (event.target.id === "pasapalabra-button" || event.code === "Space"){
+        }else if (event.target.id === "pasapalabra-button"){
             this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
         }
     }
@@ -258,6 +260,7 @@ class Game {
             document.querySelector("#pasapalabra-button").removeEventListener("click", this);
             document.querySelector("#question-output").innerHTML = "Fin del juego.";
             document.querySelector("#answer-output").innerHTML = "Bye!";
+            document.querySelector("#replay-button").removeAttribute("hidden");
         }else {
             this.#askQuestion();        
         }
@@ -281,6 +284,8 @@ class Game {
                 questionHtmlElements[i].className = "question question-right";
             }else if(updateGameArray[i].status === false){
                 questionHtmlElements[i].className = "question question-wrong";
+            }else{
+                questionHtmlElements[i].className = "question question-unanswered";
             }
         }
     }
@@ -288,5 +293,17 @@ class Game {
 
 
 const scoreBoard = new ScoreBoard();
-const currentGame = new Game("Jugador"); //TODO pedir nombre
-currentGame.start();
+
+document.querySelector("#play-button").addEventListener("click", () => {
+    document.querySelector(".interface").setAttribute("hidden", true);
+    document.querySelector(".game").removeAttribute("hidden");
+    let currentGame = new Game(document.querySelector("#input-player-name").value);
+    document.querySelector("#input-player-name").value = "";
+    currentGame.start();
+});
+
+document.querySelector("#replay-button").addEventListener("click", () => {
+    document.querySelector(".game").setAttribute("hidden", true);
+    document.querySelector("#replay-button").setAttribute("hidden", true);
+    document.querySelector(".interface").removeAttribute("hidden");
+});
