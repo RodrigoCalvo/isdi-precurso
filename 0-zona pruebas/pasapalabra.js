@@ -63,7 +63,7 @@ const questionsAnswersDataBase = [
     {letter: "g", answer: "gaucho", question: "CON LA G. Se dice de las personas que viven en las grandes llanuras de Argentina y Uruguay y llevan el ganado de un lado a otro."},
     {letter: "h", answer: "himno", question: "CON LA H. Poesía o composición musical en alabanza de alguien o algo, como la que se dedica a un país."},
     {letter: "i", answer: "imán", question: "CON LA I. Mineral capaz de atraer el hierro u otros metales."},
-    {letter: "j", answer: "jabato", question: "CON LA J. Cría del jabalí."},
+    {letter: "j", answer: "jabato.", question: "CON LA J. Cría del jabalí."},
     {letter: "k", answer: "kamikaze", question: "CON LA K. Piloto japonés que se lanzaba en su avión contra un barco u otro objetivo enemigo para destruirlo, aunque muriera al hacerlo."},
     {letter: "l", answer: "lombriz", question: "CON LA L. Gusano muy largo de color rojizo que se alimenta de sustancias que hay en la tierra."},
     {letter: "m", answer: "mudéjar", question: "CON LA M. Nombre que se daba a los musulmanes que vivían en los reinos cristianos de la península ibérica."},
@@ -296,8 +296,8 @@ class Game {
 const scoreBoard = new ScoreBoard();
 
 /* esto se puede trasladar al html tras la maquetación */
-document.querySelector(".game").setAttribute("hidden", true);
-document.querySelector("#replay-button").setAttribute("hidden", true);
+// document.querySelector(".game").setAttribute("hidden", true);
+// document.querySelector("#replay-button").setAttribute("hidden", true);
 
 document.querySelector("#play-button").addEventListener("click", () => {
     document.querySelector(".interface").setAttribute("hidden", true);

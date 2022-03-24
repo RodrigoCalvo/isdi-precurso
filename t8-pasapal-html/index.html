@@ -10,17 +10,17 @@
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
-        <div class="main-container">
+
             <h1>Pasapalabra</h1>
-            <section class="interface">
-                <div class="info">
-                    <h3>Descripción del juego:</h3>
+            <div class="cover">
+                <div class="cover__text">
+                    <h2 class="cover__title">Descripción del juego:</h2>
                     <p>El jugador debe adivinar, dentro del tiempo establecido, 27 palabras diferentes, cada una con una letra del alfabeto, contando para ello con una definición corta y como pista que empieza o contienen por la letra en la que se encuentre el jugador en ese momento.</p>
-                    <h3>Instrucciones:</h3>
-                    <p class="info-instructions">Pulsar enter o el botón Enviar confirma la respuesta. Escribir "pasapalabra", enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta. Las preguntas saltadas volverán a aparecer al finalizar el recorrido por el alfabeto. Se puede escribir en mayúsculas o minúsculas indistintamente, pero se deben respetar las tildes.</p>
+                    <h2 class="cover__title">Instrucciones:</h2>
+                    <p>Pulsar enter o el botón Enviar confirma la respuesta. Escribir "pasapalabra", enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta. Las preguntas saltadas volverán a aparecer al finalizar el recorrido por el alfabeto. Se puede escribir en mayúsculas o minúsculas indistintamente, pero se deben respetar las tildes.</p>
                 </div>
-                <div>
-                    <h3>Datos de jugador:</h3>
+                <div class="cover__form">
+                    <h2 class="cover__title cover__text">Datos de jugador:</h2>
                     <p class="player-data">
                         <span>Nombre: <input type="text" class="input-player-name" id="input-player-name"></span>
                         <span><input type="checkbox" id="boolean-timer"> Jugar con temporizador</span>
@@ -150,7 +150,7 @@
                     <div><input type="button" value="Jugar de nuevo" id="replay-button"></div>
                 </div>
             </section>
-        </div>
+
         <script src="./pasapalabra.js"></script>
     </body>
 </html>

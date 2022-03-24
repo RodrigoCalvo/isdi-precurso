@@ -12,12 +12,12 @@ h1{
     font-size: 3.5rem;
     text-align: center;
 }
-.cover__title{
+h3{
     font-size: 1.5rem;
     font-weight: 300;
     letter-spacing: 0.2rem;
 }
-.cover__text{
+.info p{
     text-indent: 2rem;
 }
 .input-player-name{
@@ -40,16 +40,16 @@ h1{
     color: #84c754;
     cursor: pointer;
 }
-.rosco {
+/* .rosco{
     position: relative;
     list-style: none;
     border: 1px solid white;
     border-radius: 50%;
     height: 15rem;
 }
-.rosco div {
+.rosco div{
     position: absolute;
-}
+} */
 .question{
     border-radius: 50%;
     width: 4rem;
