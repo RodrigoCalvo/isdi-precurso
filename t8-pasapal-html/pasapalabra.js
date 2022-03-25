@@ -198,7 +198,7 @@ class Timer{
         this.elementID = elementID;
         this.intervalId = undefined;
     }
-    show(currentGame){
+    show(){
         let timerNum = this.count;
         this.intervalId = setInterval(() => {
             timerNum--;
@@ -210,7 +210,7 @@ class Timer{
                 clearInterval(this.intervalId);
                 document.querySelector("#"+this.elementID).innerHTML = "160";
                 document.querySelector("#"+this.elementID).className = "game__timer";
-                currentGame.endOfGame("time over")
+                document.querySelector("#"+this.elementID).dispatchEvent(new Event("timerUp"));
             }
         }, 1000);
     }
@@ -227,57 +227,20 @@ class Game {
         this.currentRosco = new Rosco(this.#pickRandomQuestions());
         this.answeredQuestions = 0;
         this.currentScore = 0;
-        if(timer) this.timer = new Timer(160, "js-timer");
+        this.timer = timer;
+        if(this.timer) this.timer = new Timer(160, "js-timer");
     }
     start(){
         document.querySelector("#js-answer-input").addEventListener("keydown", this);
         document.querySelector("#js-send-answer-btn").addEventListener("click", this);
         document.querySelector("#js-pasapalabra-btn").addEventListener("click", this);
         document.querySelector("#js-exit-btn").addEventListener("click", this);
+        if(this.timer) document.querySelector("#js-timer").addEventListener("timerUp", this);
         document.querySelector("#js-answer-input").value = "";
         document.querySelector("#js-answer-input").focus();
         this.#updateGameStatus();
         this.#askQuestion();
-        this.timer.show(this);
-    }
-    endOfGame(status){
-        function commonTasks(){ //removeListeners, unhide button
-            document.querySelector("#js-answer-input").removeEventListener("keydown", this);
-            document.querySelector("#js-send-answer-btn").removeEventListener("click", this);
-            document.querySelector("#js-pasapalabra-btn").removeEventListener("click", this);
-            document.querySelector("#js-exit-btn").removeEventListener("click", this);
-            document.querySelector("#js-replay-btn").className = "form__button";
-
-        }
-        switch(status){
-            case "exited":
-                commonTasks();
-                document.querySelector("#js-question-output").innerHTML = "Has cancelado el juego.";
-                document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas, pero tu puntuación no se almacenará`;
-                this.timer.cancel();
-                break;
-            case "time over":
-                commonTasks();
-                document.querySelector("#js-question-output").innerHTML = "El tiempo se ha acabado!";
-                document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas. Tu puntuación será almacenada`;
-                scoreBoard.addScore(new Score(this.playerName, this.currentScore));
-                break;
-            case "check":
-                let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
-                if (end){
-                    commonTasks();
-                    document.querySelector("#js-question-output").innerHTML = "Has completado el juego!";
-                    document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas. Tu puntuación será almacenada`;
-                    scoreBoard.addScore(new Score(this.playerName, this.currentScore));
-                    this.timer.cancel();
-                }else {
-                    this.#askQuestion();
-                }
-                break;
-            default:
-                this.#askQuestion();
-                break;
-        }
+        if(this.timer) this.timer.show();
     }
     handleEvent(event){ //get player answer
         if (event.target.id === "js-send-answer-btn" || event.code === "Enter"){
@@ -291,7 +254,9 @@ class Game {
         }else if (event.target.id === "js-pasapalabra-btn"){
             this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
         }else if (event.target.id === "js-exit-btn"){
-            this.endOfGame("exited");
+            this.#endOfGame("exited");
+        }else if(event.target.id === "js-timer"){
+            this.#endOfGame("time over");
         }
     }
     #askQuestion(){
@@ -323,7 +288,50 @@ class Game {
         }else {
             answerOutput.innerHTML =  `¡Incorrecto, la respuesta era ${playerAnswer.toUpperCase()}!`;
         }
-        this.endOfGame("check");
+        this.#endOfGame("check");
+    }
+    #endOfGame(status){
+        switch(status){
+            case "exited":
+                document.querySelector("#js-answer-input").removeEventListener("keydown", this);
+                document.querySelector("#js-send-answer-btn").removeEventListener("click", this);
+                document.querySelector("#js-pasapalabra-btn").removeEventListener("click", this);
+                document.querySelector("#js-exit-btn").removeEventListener("click", this);
+                if(this.timer) document.querySelector("#js-timer").removeEventListener("timerUp", this);
+                document.querySelector("#js-replay-btn").className = "form__button";
+                document.querySelector("#js-question-output").innerHTML = "Has cancelado el juego.";
+                document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas, pero tu puntuación no se almacenará`;
+                if(this.timer) this.timer.cancel();
+                break;
+            case "time over":
+                document.querySelector("#js-answer-input").removeEventListener("keydown", this);
+                document.querySelector("#js-send-answer-btn").removeEventListener("click", this);
+                document.querySelector("#js-pasapalabra-btn").removeEventListener("click", this);
+                document.querySelector("#js-exit-btn").removeEventListener("click", this);
+                if(this.timer) document.querySelector("#js-timer").removeEventListener("timerUp", this);
+                document.querySelector("#js-replay-btn").className = "form__button";
+                document.querySelector("#js-question-output").innerHTML = "El tiempo se ha acabado!";
+                document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas. Tu puntuación será almacenada`;
+                scoreBoard.addScore(new Score(this.playerName, this.currentScore));
+                break;
+            case "check":
+                let end = this.answeredQuestions === this.currentRosco.getLength();
+                if (end === true){
+                    document.querySelector("#js-answer-input").removeEventListener("keydown", this);
+                    document.querySelector("#js-send-answer-btn").removeEventListener("click", this);
+                    document.querySelector("#js-pasapalabra-btn").removeEventListener("click", this);
+                    document.querySelector("#js-exit-btn").removeEventListener("click", this);
+                    if(this.timer) document.querySelector("#js-timer").removeEventListener("timerUp", this);
+                    document.querySelector("#js-replay-btn").className = "form__button";
+                    document.querySelector("#js-question-output").innerHTML = "Has completado el juego!";
+                    document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas. Tu puntuación será almacenada`;
+                    scoreBoard.addScore(new Score(this.playerName, this.currentScore));
+                    if(this.timer) this.timer.cancel();
+                }else {
+                    this.#askQuestion();
+                }
+                break;
+        }
     }
     #pickRandomQuestions(){ //elige preguntas al azar de la bd, una para cada letra
         const choosedQuestionsObjs = [];
@@ -376,4 +384,5 @@ document.querySelector("#js-replay-btn").addEventListener("click", () => {
     document.querySelector("#js-game").className = "game game--hidden";
     document.querySelector("#js-replay-btn").className = "form__button form__button--hidden";
     document.querySelector("#js-cover").className = "cover";
+    document.querySelector("#js-answer-output").innerHTML = "";
 });
