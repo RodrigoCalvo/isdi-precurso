@@ -2,15 +2,19 @@ body {
     background-color: black;
     color: #84c754;
     font-family: "Anton", Arial, sans-serif;
-    max-width: 37rem; /* temporal, es el ancho del grid de preguntas*/
+    /* max-width: 40rem; */
     margin: auto;
     text-align: justify;
 }
-h1{
+.title{
     text-transform: uppercase;
     font-family: "Audiowide", Arial, sans-serif;
-    font-size: 3.5rem;
+    font-size: min(3.5rem, 10vw);
     text-align: center;
+}
+.cover{
+    display: flex;
+    flex-direction: column;
 }
 .cover__title{
     font-size: 1.5rem;
@@ -20,112 +24,121 @@ h1{
 .cover__text{
     text-indent: 2rem;
 }
-.input-player-name{
+.cover__show-scoreboard-button{
+    max-width: fit-content;
+    align-self: center;
+    background-color: #000;
+    color: #84c754;
+    font-family: "Audiowide", Arial, sans-serif;
+    font-size: min(1rem, 3vw);
+    margin-top: min(0.75rem, 1vw);
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.cover__scoreboard-list{
+    align-self: center;
+    list-style: none;
+    padding-left: 0;
+}
+.cover__scoreboard-list--hidden{
+    display: none;
+}
+.cover--hidden{
+    display: none;
+}
+.form{
+    display: flex;
+    flex-direction: column;
+}
+.form--spread{
+    flex-direction: row;
+    justify-content: space-between;
+}
+.form__input{
     vertical-align: text-top;
     font-family: "Anton", Arial, sans-serif;
 }
-.player-data{
-    display: flex;
-    justify-content: space-between;
-}
-#play-button{
-    display: block;
-    margin: 2.3rem auto;
-    width: 14rem;
-    height: 4rem;
+.form__input--big-and-wide{
+    width: 60%;
+    margin: auto;
     font-size: 2rem;
-    text-transform: uppercase;
-    font-family: "Audiowide", Arial, sans-serif;
-    background-color: #000;
-    color: #84c754;
-    cursor: pointer;
-}
-.rosco {
-    position: relative;
-    list-style: none;
-    border: 1px solid white;
-    border-radius: 50%;
-    height: 15rem;
-}
-.rosco div {
-    position: absolute;
-}
-.question{
-    border-radius: 50%;
-    width: 4rem;
-    height: 4rem;
-    text-align: center;
-    font-size: 1.5rem;
-    text-shadow: 1px 1px 3px black;
-}
-.question-unanswered{
-    background: radial-gradient(circle at 33% 33%, rgb(190, 190, 190) 0%, rgb(0, 0, 0) 85%, black 100%);
-}
-
-.question-right{
-    background: radial-gradient(circle at 1rem 1rem, rgb(43, 133, 25) 0%, rgb(0, 0, 0) 85%, black 100%);
-}
-.question-wrong{
-    background: radial-gradient(circle at 1rem 1rem, rgb(179, 49, 49) 0%, rgb(0, 0, 0) 85%, black 100%);
-}
-.question-output{
-    padding-top: 2rem;
-    font-size: 1.7rem;
-    text-align: center;
-}
-.answer-container{
-    display: flex;
-    justify-content: center;
-}
-.answer-input{
-    font-size: 2rem;
-    margin: 10px 5px 20px;
     font-family: "Anton", Arial, sans-serif;
     text-align: center;
 }
-
-.answer-output{
-    font-size: 2rem;
-    text-align: center;
-    padding: 1rem 0;
-    /* border: solid 1px red; */
-}
-.send-answer-button{
-    padding: 1rem 2rem;
-    font-size: 2rem;
-    text-transform: uppercase;
-    font-family: "Audiowide", Arial, sans-serif;
+.form__button{
     background-color: #000;
     color: #84c754;
-    cursor: pointer;
-}
-.pasapalabra-button{
-    padding: 1rem 2rem;
-    font-size: 2rem;
-    text-transform: uppercase;
     font-family: "Audiowide", Arial, sans-serif;
-    background-color: #000;
-    color: #84c754;
+    margin: 0.7rem auto;
+    font-size: min(2rem, 6vw);
+    text-transform: uppercase;
     cursor: pointer;
+    padding: min(0.75rem, 2vw) min(1.5rem,4vw);
+    width: 100%;
+    max-width: max-content;
 }
-.buttons-container{
+.form__button--hidden{
+    display: none;
+}
+.game{
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
-.scoreboard-container{
-    margin: 20px 0px;
+.game__timer{
+    align-self: center;
+    background-color: #84c754;
+    color: black;
+    width: min(6.5rem, 8vw);
+    font-size: min(3rem, 4.25vw);
+    text-align: center;
 }
-.replay-container{
+.game__timer--hurry{
+    color:red;
+}
+.game__exit-button{
+    align-self: flex-end;
+    background-color: rgb(179, 49, 49);
+    padding: 0 min(0.4rem, 1vw);
+    cursor: pointer;
+}
+.game__hub{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto;
+}
+.game__ball{
     display: flex;
     justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: relative;
+    width: 11vw;
+    height: 11vw;
+    max-width: 5rem;
+    max-height: 5rem;
+    font-size: min(3vw, 1.5rem);
+    text-shadow: 1px 1px 3px black;
 }
-#replay-button{
-    padding: 1rem 2rem;
-    margin: 2.3rem auto;
-    font-size: 2rem;
-    text-transform: uppercase;
-    font-family: "Audiowide", Arial, sans-serif;
-    background-color: #000;
-    color: #84c754;
-    cursor: pointer;
+.game__ball--unanswered{
+    background: radial-gradient(circle at 33% 33%, rgb(190, 190, 190) 0%, rgb(0, 0, 0) 85%, black 100%);
+}
+.game__ball--right{
+    background: radial-gradient(circle at 1rem 1rem, rgb(43, 133, 25) 0%, rgb(0, 0, 0) 85%, black 100%);
+}
+.game__ball--wrong{
+    background: radial-gradient(circle at 1rem 1rem, rgb(179, 49, 49) 0%, rgb(0, 0, 0) 85%, black 100%);
+}
+.game__text{
+    font-size: min(2rem, 2.5vw);
+    text-align: center;
+}
+.game__answer-input{
+    width: 60%;
+    align-self: center;
+    font-family: "Anton", Arial, sans-serif;
+    text-align: center;
+    font-size: min(2rem, 2.5vw);
+}
+.game--hidden{
+    display: none;
 }

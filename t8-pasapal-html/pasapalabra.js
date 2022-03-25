@@ -1,4 +1,3 @@
-//import questionsAnswersDataBase from "./preguntas.js";
 const questionsAnswersDataBase = [
     {letter: "a", answer: "abducir", question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien"},
     {letter: "b", answer: "bingo", question: "CON LA B. Juego que ha sacado de quicio a todos los 'Skylabers' en las sesiones de precurso"},
@@ -107,7 +106,8 @@ const questionsAnswersDataBase = [
     {letter: "w", answer: "waterpolo", question: "CON LA W. Juego practicado en una piscina entre dos equipos, que consiste en introducir el balón en la portería contraria"},
     {letter: "x", answer: "xilófono", question: "CON LA X. Instrumento musical formado por láminas de diferentes tamaños, que suenan al golpearlas"},
     {letter: "y", answer: "yegua", question: "CON LA Y. Hembra del caballo"},
-    {letter: "z", answer: "zapato", question: "CON LA Z. Calzado que nos ponemos en los pies para caminar"}];
+    {letter: "z", answer: "zapato", question: "CON LA Z. Calzado que nos ponemos en los pies para caminar"}
+];
 
 class Question {
     constructor(letter, answer, question) {
@@ -188,44 +188,117 @@ class ScoreBoard {
         for (const score of this.scoreBoard){
             scoresListString += `<li>${score.name}: ${score.score} puntos</li>`;
         }
-        document.querySelector("#scoreboard-list").innerHTML = scoresListString;
+        document.querySelector("#js-scoreboard-list").innerHTML = scoresListString;
     };
 }
 
+class Timer{
+    constructor(count, elementID){
+        this.count = count;
+        this.elementID = elementID;
+        this.intervalId = undefined;
+    }
+    show(currentGame){
+        let timerNum = this.count;
+        this.intervalId = setInterval(() => {
+            timerNum--;
+            document.querySelector("#"+this.elementID).innerHTML = timerNum;
+            if (timerNum <= 10){
+                document.querySelector("#"+this.elementID).className = "game__timer game__timer--hurry";
+            }
+            if(timerNum <= 0){
+                clearInterval(this.intervalId);
+                document.querySelector("#"+this.elementID).innerHTML = "160";
+                document.querySelector("#"+this.elementID).className = "game__timer";
+                currentGame.endOfGame("time over")
+            }
+        }, 1000);
+    }
+    cancel(){
+        clearInterval(this.intervalId);
+        document.querySelector("#"+this.elementID).className = "game__timer";
+        document.querySelector("#"+this.elementID).innerHTML = "160";
+    }
+}
 class Game {
-    constructor(playerName){
+    constructor(playerName, timer){
         if (playerName === "") playerName = "Anónimo";
         this.playerName = playerName;
         this.currentRosco = new Rosco(this.#pickRandomQuestions());
         this.answeredQuestions = 0;
         this.currentScore = 0;
+        if(timer) this.timer = new Timer(160, "js-timer");
     }
     start(){
-        document.querySelector("#answer-input").addEventListener("keydown", this);
-        document.querySelector("#send-answer-button").addEventListener("click", this);
-        document.querySelector("#pasapalabra-button").addEventListener("click", this);
-        document.querySelector("#answer-input").value = "";
+        document.querySelector("#js-answer-input").addEventListener("keydown", this);
+        document.querySelector("#js-send-answer-btn").addEventListener("click", this);
+        document.querySelector("#js-pasapalabra-btn").addEventListener("click", this);
+        document.querySelector("#js-exit-btn").addEventListener("click", this);
+        document.querySelector("#js-answer-input").value = "";
+        document.querySelector("#js-answer-input").focus();
         this.#updateGameStatus();
         this.#askQuestion();
+        this.timer.show(this);
     }
-    handleEvent(event){ //getPlayerAnswer
-        if (event.target.id === "send-answer-button" || event.code === "Enter"){
-            if(document.querySelector("#answer-input").value !== ""){
+    endOfGame(status){
+        function commonTasks(){ //removeListeners, unhide button
+            document.querySelector("#js-answer-input").removeEventListener("keydown", this);
+            document.querySelector("#js-send-answer-btn").removeEventListener("click", this);
+            document.querySelector("#js-pasapalabra-btn").removeEventListener("click", this);
+            document.querySelector("#js-exit-btn").removeEventListener("click", this);
+            document.querySelector("#js-replay-btn").className = "form__button";
+
+        }
+        switch(status){
+            case "exited":
+                commonTasks();
+                document.querySelector("#js-question-output").innerHTML = "Has cancelado el juego.";
+                document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas, pero tu puntuación no se almacenará`;
+                this.timer.cancel();
+                break;
+            case "time over":
+                commonTasks();
+                document.querySelector("#js-question-output").innerHTML = "El tiempo se ha acabado!";
+                document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas. Tu puntuación será almacenada`;
+                scoreBoard.addScore(new Score(this.playerName, this.currentScore));
+                break;
+            case "check":
+                let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
+                if (end){
+                    commonTasks();
+                    document.querySelector("#js-question-output").innerHTML = "Has completado el juego!";
+                    document.querySelector("#js-answer-output").innerHTML = `Has acertado ${this.currentScore} preguntas. Tu puntuación será almacenada`;
+                    scoreBoard.addScore(new Score(this.playerName, this.currentScore));
+                    this.timer.cancel();
+                }else {
+                    this.#askQuestion();
+                }
+                break;
+            default:
+                this.#askQuestion();
+                break;
+        }
+    }
+    handleEvent(event){ //get player answer
+        if (event.target.id === "js-send-answer-btn" || event.code === "Enter"){
+            if(document.querySelector("#js-answer-input").value !== ""){
                 this.#replyAnswerToPlayer(this.#handleAnswer(false));
-                document.querySelector("#answer-input").value = "";
-                document.querySelector("#answer-input").focus();
+                document.querySelector("#js-answer-input").value = "";
+                document.querySelector("#js-answer-input").focus();
             }else {
                 this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
             }
-        }else if (event.target.id === "pasapalabra-button"){
+        }else if (event.target.id === "js-pasapalabra-btn"){
             this.#replyAnswerToPlayer(this.#handleAnswer(true));//pasapalabra
+        }else if (event.target.id === "js-exit-btn"){
+            this.endOfGame("exited");
         }
     }
     #askQuestion(){
-        document.querySelector("#question-output").innerHTML = this.currentRosco.getQuestion();
+        document.querySelector("#js-question-output").innerHTML = this.currentRosco.getQuestion();
     }
     #handleAnswer(pasapalabra){
-        let givenAnswer = document.querySelector("#answer-input").value;
+        let givenAnswer = document.querySelector("#js-answer-input").value;
         let returnedValue; //undefined/true/string
         if (givenAnswer.toUpperCase() === "PASAPALABRA" || pasapalabra){
             this.currentRosco.skipQuestion();
@@ -242,7 +315,7 @@ class Game {
         return returnedValue;
     }
     #replyAnswerToPlayer(playerAnswer){
-        let answerOutput = document.querySelector("#answer-output");
+        let answerOutput = document.querySelector("#js-answer-output");
         if(playerAnswer === true){
             answerOutput.innerHTML = "¡Respuesta correcta!";
         }else if(playerAnswer === undefined){
@@ -250,22 +323,7 @@ class Game {
         }else {
             answerOutput.innerHTML =  `¡Incorrecto, la respuesta era ${playerAnswer.toUpperCase()}!`;
         }
-        this.#endOfGame();
-    }
-    #endOfGame(){
-        let end = this.answeredQuestions === this.currentRosco.getLength() ? true : false;
-        if (end){
-            scoreBoard.addScore(new Score(this.playerName, this.currentScore));
-            document.querySelector("#answer-input").removeEventListener("keydown", this);
-            document.querySelector("#send-answer-button").removeEventListener("click", this);
-            document.querySelector("#pasapalabra-button").removeEventListener("click", this);
-            document.querySelector("#question-output").innerHTML = "Fin del juego.";
-            document.querySelector("#answer-output").innerHTML = "Bye!";
-            document.querySelector("#replay-button").removeAttribute("hidden");
-        }else {
-            this.#askQuestion();        
-        }
-        return end;
+        this.endOfGame("check");
     }
     #pickRandomQuestions(){ //elige preguntas al azar de la bd, una para cada letra
         const choosedQuestionsObjs = [];
@@ -279,14 +337,14 @@ class Game {
     }
     #updateGameStatus(){
         let updateGameArray = this.currentRosco.getUpdateRosco();
-        let questionHtmlElements = document.querySelectorAll(".question");
+        let questionHtmlElements = document.querySelectorAll(".game__ball");
         for (let i = 0; i < updateGameArray.length; i++){
             if (updateGameArray[i].status === true){
-                questionHtmlElements[i].className = "question question-right";
+                questionHtmlElements[i].className = "game__ball game__ball--right";
             }else if(updateGameArray[i].status === false){
-                questionHtmlElements[i].className = "question question-wrong";
+                questionHtmlElements[i].className = "game__ball game__ball--wrong";
             }else{
-                questionHtmlElements[i].className = "question question-unanswered";
+                questionHtmlElements[i].className = "game__ball game__ball--unanswered";
             }
         }
     }
@@ -295,24 +353,27 @@ class Game {
 
 const scoreBoard = new ScoreBoard();
 
-/* esto se puede trasladar al html tras la maquetación */
-document.querySelector(".game").setAttribute("hidden", true);
-document.querySelector("#replay-button").setAttribute("hidden", true);
+document.querySelector("#js-game").className = "game game--hidden";
+document.querySelector("#js-replay-btn").className = "form__button form__button--hidden";
 
-document.querySelector("#play-button").addEventListener("click", () => {
-    document.querySelector(".interface").setAttribute("hidden", true);
-    document.querySelector(".game").removeAttribute("hidden");
-    let currentGame = new Game(document.querySelector("#input-player-name").value);
-    document.querySelector("#input-player-name").value = "";
+document.querySelector("#js-play-btn").addEventListener("click", () => {
+    document.querySelector("#js-cover").className = "cover cover--hidden";
+    document.querySelector("#js-game").className = "game";
+    let currentGame = new Game(document.querySelector("#js-player-name").value, document.querySelector("#js-timer-boolean").checked);
+    document.querySelector("#js-player-name").value = "";
     currentGame.start();
 });
 
-document.querySelector("#replay-button").addEventListener("click", () => {
-    document.querySelector(".game").setAttribute("hidden", true);
-    document.querySelector("#replay-button").setAttribute("hidden", true);
-    document.querySelector(".interface").removeAttribute("hidden");
-});
+document.querySelector("#js-show-scoreboard").addEventListener("click", () => {
+    if (document.querySelector("#js-scoreboard-list").className === "cover__scoreboard-list"){
+        document.querySelector("#js-scoreboard-list").className = "cover__scoreboard-list cover__scoreboard-list--hidden";
+    }else {
+        document.querySelector("#js-scoreboard-list").className = "cover__scoreboard-list";
+    }
+})
 
-//TODO aceptar END?
-//TODO timer
-//esconder reply-answer-container hasta que se necesite
+document.querySelector("#js-replay-btn").addEventListener("click", () => {
+    document.querySelector("#js-game").className = "game game--hidden";
+    document.querySelector("#js-replay-btn").className = "form__button form__button--hidden";
+    document.querySelector("#js-cover").className = "cover";
+});

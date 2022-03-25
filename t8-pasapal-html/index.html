@@ -10,146 +10,85 @@
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
+        <h1 class="title">Pasapalabra</h1>
 
-            <h1>Pasapalabra</h1>
-            <div class="cover">
-                <div class="cover__text">
-                    <h2 class="cover__title">Descripción del juego:</h2>
-                    <p>El jugador debe adivinar, dentro del tiempo establecido, 27 palabras diferentes, cada una con una letra del alfabeto, contando para ello con una definición corta y como pista que empieza o contienen por la letra en la que se encuentre el jugador en ese momento.</p>
-                    <h2 class="cover__title">Instrucciones:</h2>
-                    <p>Pulsar enter o el botón Enviar confirma la respuesta. Escribir "pasapalabra", enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta. Las preguntas saltadas volverán a aparecer al finalizar el recorrido por el alfabeto. Se puede escribir en mayúsculas o minúsculas indistintamente, pero se deben respetar las tildes.</p>
-                </div>
-                <div class="cover__form">
-                    <h2 class="cover__title cover__text">Datos de jugador:</h2>
-                    <p class="player-data">
-                        <span>Nombre: <input type="text" class="input-player-name" id="input-player-name"></span>
-                        <span><input type="checkbox" id="boolean-timer"> Jugar con temporizador</span>
-                    </p>
-                    <input type="button" value="Jugar" id="play-button">
-                </div>
-                <div class="scoreboard-container">
-                    <details>
-                        <summary>Puntuaciones</summary>
-                        <ul class="scoreboard-list" id="scoreboard-list">
-                        </ul>
+        <div class="cover" id="js-cover">
+            <h2 class="cover__title">Descripción del juego:</h2>
+            <p class="cover__text">El jugador debe adivinar, dentro del tiempo establecido, 27 palabras diferentes, cada una con una letra del alfabeto, contando para ello con una definición corta y como pista que empieza o contienen por la letra en la que se encuentre el jugador en ese momento.</p>
+            <h2 class="cover__title">Instrucciones:</h2>
+            <p class="cover__text">Pulsar enter o el botón Enviar confirma la respuesta. Escribir "pasapalabra", enviar una respuesta en blanco o pulsar el botón Pasapalabra salta la pregunta. Las preguntas saltadas volverán a aparecer al finalizar el recorrido por el alfabeto. Se puede escribir en mayúsculas o minúsculas indistintamente, pero se deben respetar las tildes.</p>
+            <h2 class="cover__title">Datos de jugador:</h2>
+            <div class="form form--spread">
+                <span>
+                    Nombre: <input class="form__input" id="js-player-name" type="text">
+                </span>
+                <span>
+                    <input id="js-timer-boolean" type="checkbox" checked> Jugar con temporizador
+                </span>
+            </div>
+            <input class="form__button" id="js-play-btn" type="button" value="Jugar">
+            
+            <input class="cover__show-scoreboard-button" id="js-show-scoreboard" type="button" value="Ver puntuaciones">
+                <ul class="cover__scoreboard-list cover__scoreboard-list--hidden" id="js-scoreboard-list">
+                </ul>
+    
 
-                    </details>
+        </div>
+
+
+        <div class="game" id="js-game">
+            <div class="game__timer" id="js-timer">160</div>
+            <div class="game__exit-button" id="js-exit-btn">X</div>
+            <div class="game__hub">
+                <div class="game__ball game__ball--unanswered">A</div>
+                <div class="game__ball game__ball--unanswered">B</div>
+                <div class="game__ball game__ball--unanswered">C</div>
+                <div class="game__ball game__ball--unanswered">D</div>
+                <div class="game__ball game__ball--unanswered">E</div>
+                <div class="game__ball game__ball--unanswered">F</div>
+                <div class="game__ball game__ball--unanswered">G</div>
+                <div class="game__ball game__ball--unanswered">H</div>
+                <div class="game__ball game__ball--unanswered">I</div>
+                <div class="game__ball game__ball--unanswered">J</div>
+                <div class="game__ball game__ball--unanswered">K</div>
+                <div class="game__ball game__ball--unanswered">L</div>
+                <div class="game__ball game__ball--unanswered">M</div>
+                <div class="game__ball game__ball--unanswered">N</div>
+                <div class="game__ball game__ball--unanswered">Ñ</div>
+                <div class="game__ball game__ball--unanswered">O</div>
+                <div class="game__ball game__ball--unanswered">P</div>
+                <div class="game__ball game__ball--unanswered">Q</div>
+                <div class="game__ball game__ball--unanswered">R</div>
+                <div class="game__ball game__ball--unanswered">S</div>
+                <div class="game__ball game__ball--unanswered">T</div>
+                <div class="game__ball game__ball--unanswered">U</div>
+                <div class="game__ball game__ball--unanswered">V</div>
+                <div class="game__ball game__ball--unanswered">W</div>
+                <div class="game__ball game__ball--unanswered">X</div>
+                <div class="game__ball game__ball--unanswered">Y</div>
+                <div class="game__ball game__ball--unanswered">Z</div>
+            </div>
+
+            <p class="game__text" id="js-question-output">
+                <!-- Aqui estamos preguntando -->
+            </p>
+
+            <div class="form">
+                <input class="form__input form__input--big-and-wide" id="js-answer-input" type="text">
+            
+            <p class="game__text" id="js-answer-output">
+                <!-- Aquí contestamos a tu respuesta -->
+            </p>
+
+                <div class="form form--spread">
+                    <input type="button" value="Enviar" class="form__button" id="js-send-answer-btn">
+                    <input type="button" value="Pasapalabra" class="form__button" id="js-pasapalabra-btn">
                 </div>
-            </section>
-            <section class="game">
-                <div class="rosco-container">
-                    <!-- <div class="rosco">
-                        <div class="question question-unanswered">A</div>
-                        <div class="question question-unanswered">B</div>
-                        <div class="question question-unanswered">C</div>
-                        <div class="question question-unanswered">D</div>
-                        <div class="question question-unanswered">E</div>
-                        <div class="question question-unanswered">F</div>
-                        <div class="question question-unanswered">G</div>
-                        <div class="question question-unanswered">H</div>
-                        <div class="question question-unanswered">I</div>
-                        <div class="question question-unanswered">J</div>
-                        <div class="question question-unanswered">K</div>
-                        <div class="question question-unanswered">L</div>
-                        <div class="question question-unanswered">M</div>
-                        <div class="question question-unanswered">N</div>
-                        <div class="question question-unanswered">Ñ</div>
-                        <div class="question question-unanswered">O</div>
-                        <div class="question question-unanswered">P</div>
-                        <div class="question question-unanswered">Q</div>
-                        <div class="question question-unanswered">R</div>
-                        <div class="question question-unanswered">S</div>
-                        <div class="question question-unanswered">T</div>
-                        <div class="question question-unanswered">U</div>
-                        <div class="question question-unanswered">V</div>
-                        <div class="question question-unanswered">W</div>
-                        <div class="question question-unanswered">X</div>
-                        <div class="question question-unanswered">Y</div>
-                        <div class="question question-unanswered">Z</div>
-                    </div> -->
-                    <!-- <ul class="rosco">
-                        <li class="question question-unanswered">A</li>
-                        <li class="question question-unanswered">B</li>
-                        <li class="question question-unanswered">C</li>
-                        <li class="question question-unanswered">D</li>
-                        <li class="question question-unanswered">E</li>
-                        <li class="question question-unanswered">F</li>
-                        <li class="question question-unanswered">G</li>
-                        <li class="question question-unanswered">H</li>
-                        <li class="question question-unanswered">I</li>
-                        <li class="question question-unanswered">J</li>
-                        <li class="question question-unanswered">K</li>
-                        <li class="question question-unanswered">L</li>
-                        <li class="question question-unanswered">M</li>
-                        <li class="question question-unanswered">N</li>
-                        <li class="question question-unanswered">Ñ</li>
-                        <li class="question question-unanswered">O</li>
-                        <li class="question question-unanswered">P</li>
-                        <li class="question question-unanswered">Q</li>
-                        <li class="question question-unanswered">R</li>
-                        <li class="question question-unanswered">S</li>
-                        <li class="question question-unanswered">T</li>
-                        <li class="question question-unanswered">U</li>
-                        <li class="question question-unanswered">V</li>
-                        <li class="question question-unanswered">W</li>
-                        <li class="question question-unanswered">X</li>
-                        <li class="question question-unanswered">Y</li>
-                        <li class="question question-unanswered">Z</li>
-                    </ul> -->
-                    <table>
-                        <tr>
-                            <td class="question question-unanswered" id="question-a">A</td>
-                            <td class="question question-unanswered" id="question-b">B</td>
-                            <td class="question question-unanswered" id="question-c">C</td>
-                            <td class="question question-unanswered" id="question-d">D</td>
-                            <td class="question question-unanswered" id="question-e">E</td>
-                            <td class="question question-unanswered" id="question-f">F</td>
-                            <td class="question question-unanswered" id="question-g">G</td>
-                            <td class="question question-unanswered" id="question-h">H</td>
-                            <td class="question question-unanswered" id="question-i">I</td>
-                        </tr>
-                        <tr>
-                            <td class="question question-unanswered" id="question-j">J</td>
-                            <td class="question question-unanswered" id="question-k">K</td>
-                            <td class="question question-unanswered" id="question-l">L</td>
-                            <td class="question question-unanswered" id="question-m">M</td>
-                            <td class="question question-unanswered" id="question-n">N</td>
-                            <td class="question question-unanswered" id="question-ñ">Ñ</td>
-                            <td class="question question-unanswered" id="question-o">O</td>
-                            <td class="question question-unanswered" id="question-p">P</td>
-                            <td class="question question-unanswered" id="question-q">Q</td>
-                        </tr>
-                        <tr>
-                            <td class="question question-unanswered" id="question-r">R</td>
-                            <td class="question question-unanswered" id="question-s">S</td>
-                            <td class="question question-unanswered" id="question-t">T</td>
-                            <td class="question question-unanswered" id="question-u">U</td>
-                            <td class="question question-unanswered" id="question-v">V</td>
-                            <td class="question question-unanswered" id="question-w">W</td>
-                            <td class="question question-unanswered" id="question-x">X</td>
-                            <td class="question question-unanswered" id="question-y">Y</td>
-                            <td class="question question-unanswered" id="question-z">Z</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="question-container">
-                    <p class="question-output" id="question-output">Aqui estamos preguntando</p>
-                </div>
-                <div class="answer-container">
-                    <span>&gt;<input type="text" class="answer-input" id="answer-input">&lt;</span>
-                </div>
-                <div class="reply-answer-container">
-                    <p class="answer-output" id="answer-output"></p>
-                </div>
-                <div class="buttons-container">
-                    <input type="button" value="Enviar" class="send-answer-button" id="send-answer-button">
-                    <input type="button" value="Pasapalabra" class="pasapalabra-button" id="pasapalabra-button">
-                </div>
-                
-                <div class="replay-container">
-                    <div><input type="button" value="Jugar de nuevo" id="replay-button"></div>
-                </div>
-            </section>
+            </div>
+
+            <input class="form__button" id="js-replay-btn" type="button" value="Jugar de nuevo">
+        
+        </div>
 
         <script src="./pasapalabra.js"></script>
     </body>
