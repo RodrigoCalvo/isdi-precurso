@@ -263,7 +263,7 @@ class Game {
         document.querySelector("#js-question-output").innerHTML = this.currentRosco.getQuestion();
     }
     #handleAnswer(pasapalabra){
-        let givenAnswer = document.querySelector("#js-answer-input").value;
+        let givenAnswer = document.querySelector("#js-answer-input").value.trim();
         let returnedValue; //undefined/true/string
         if (givenAnswer.toUpperCase() === "PASAPALABRA" || pasapalabra){
             this.currentRosco.skipQuestion();
