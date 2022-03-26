@@ -2,7 +2,7 @@
 // pedir volver a jugar <-- ya hay reiniciar, innecesario?
 // ¿quizás menú de portada?
 
-// CONECTA 4 Pro
+// CONECTA 4 Pro <-- aquí sí que hace falta menú
 // Se tiene que añadir la opción de jugar contra la máquina. Antes de iniciar la partida se le pedirá al jugador si tiene un compañero con quien jugar o quiere jugar contra la máquina.
 
 class Node{
