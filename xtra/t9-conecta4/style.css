@@ -1,0 +1,46 @@
+.board{
+    width: 8.2rem;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    gap: 0.2rem;
+}
+.board__square{
+    background-color: rgb(238, 196, 162);
+    width: 2rem;
+    height: 2rem;
+}
+.board__control-square{
+    cursor: pointer;
+}
+.board__playable-square{
+    background-color: rgb(162, 209, 209);
+}
+.board__token{
+    width: 1.7rem;
+    height: 1.7rem;
+    border-radius: 50%;
+    margin: auto;
+    margin-top: 0.15rem;
+}
+.board__token--red{
+    background-color: red;
+}
+.board__token--blue{
+    background-color: blue;
+}
+.turn{
+    padding-top: 1rem;
+    font-size: 1.2rem;
+}
+.turn__indicator{
+    text-transform: uppercase;
+}
+.turn__indicator--red{
+    color: red;
+}
+.turn__indicator--blue{
+    color: blue;
+}
+.reset-button{
+    margin: 0.7rem;
+}
