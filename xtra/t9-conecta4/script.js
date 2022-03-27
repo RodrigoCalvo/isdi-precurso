@@ -58,7 +58,7 @@ class Board{
         this.emptySquares = 42; //grid 7x6
     }
     setNode(coordX, color){
-        let emptyCoordY = this.#getFirstEmptyPlace(coordX);
+        let emptyCoordY = this.getFirstEmptyPlace(coordX);
         if(emptyCoordY !== null){
             this.gridArray[coordX][emptyCoordY] = new Node(Number.parseInt(coordX), emptyCoordY, color);
             this.emptySquares--;
@@ -79,7 +79,7 @@ class Board{
         }
         return [false, undefined];
     }
-    #getFirstEmptyPlace(column){
+    getFirstEmptyPlace(column){
         let coordY = 0
         while(this.gridArray[column][coordY]!==undefined) coordY++;
         return coordY < 6 ? coordY : null;
@@ -188,9 +188,7 @@ class ArtificialIntelligence{
             }
         }
         if (bestColumn === undefined){
-            // if(!this.isGivingWinMove()) getPartialRandomColumn()
-            // if(!this.isGivingWinMove()) getPartialRandomColumn(exclusions)
-
+            bestColumn = this.getPartialRandomColumn(board);
         }
     }
     getWinnerMove(board, color){
@@ -216,8 +214,34 @@ class ArtificialIntelligence{
         }
     }
     getBestScore(board, color){
+        let choosenColumn;
         let searchingBoard = this.copyBoard(board);
-        
+        //buscar patrones de dos #color juntos, con dos undefined en línea
+        //
+        //
+        return choosenColumn;
+    }
+    getPartialRandomColumn(board){
+        let choosenColumn = 3; //por defecto, el centro
+        let posibleColumns = [0, 1, 2, 4, 5, 6];
+        if (board.getFirstEmptyPlace(choosenColumn) === null){
+            let avalaibleColumn = false;
+            do{
+                choosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
+                if (board.getFirstEmptyPlace(choosenColumn) !== null){
+                    avalaibleColumn = !this.isGivingWinMove(board, choosenColumn);
+                }
+            } while(!avalaibleColumn && posibleColumns.length > 0);
+            if (avalaibleColumn === true){
+                return choosenColumn;
+            }else { //cpu ha perdido, columna al azar no llena
+                posibleColumns = [0, 1, 2, 4, 5, 6];
+                do{
+                    choosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
+                }while(board.getFirstEmptyPlace(choosenColumn) === null && posibleColumns.length > 0);
+            }
+        }
+        return choosenColumn;
     }
 }
 
