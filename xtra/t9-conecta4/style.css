@@ -1,3 +1,15 @@
+.menu{
+    font-size: 1rem;
+}
+.menu__info{
+    text-indent: 1rem;
+}
+.menu__button{
+    margin: 1rem 0 1rem 1rem;
+}
+.menu--hidden{
+    display: none;
+}
 .board{
     width: 8.2rem;
     display: grid;
@@ -28,6 +40,9 @@
 .board__token--blue{
     background-color: blue;
 }
+.board--hidden{
+    display: none;
+}
 .turn{
     padding-top: 1rem;
     font-size: 1.2rem;
@@ -41,6 +56,12 @@
 .turn__indicator--blue{
     color: blue;
 }
-.reset-button{
+.turn--hidden{
+    display: none;
+}
+.exit{
     margin: 0.7rem;
+}
+.exit--hidden{
+    display: none;
 }

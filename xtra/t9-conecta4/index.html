@@ -9,7 +9,12 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div class="board">
+    <div class="menu" id="js-menu">
+        <div class="menu__info">Aqui va la descripción del juego</div>
+        <input class="menu__button" id="js-play-vs-cpu-btn" type="button" value="Jugar vs CPU">
+        <input class="menu__button" id="js-play-one-vs-one-btn" type="button" value="Jugar 1vs1">
+    </div>
+    <div class="board" id="js-board">
         <div class="board__square board__control-square" id="js-supboard-x0"></div>
         <div class="board__square board__control-square" id="js-supboard-x1"></div>
         <div class="board__square board__control-square" id="js-supboard-x2"></div>
@@ -61,7 +66,7 @@
         <div class="board__square board__playable-square"><div id="js-board-x6y0"></div></div>
     </div>
     <div class="turn" id="js-turn">Siguiente turno: <span class="turn__indicator turn__indicator--red" id="js-turn-indicator">red</span>.</div>
-    <input class="reset-button" id="js-reset-button" type="button" value="Reiniciar juego">
+    <input class="exit" id="js-exit-btn" type="button" value="Salir">
 
     <script src="./script.js"></script>
 </body>

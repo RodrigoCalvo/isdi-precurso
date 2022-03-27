@@ -140,9 +140,13 @@ class Board{
 }
 
 class Game{
-    constructor(){
+    constructor(playVsCPU){
+        this.playerColor = "red";
+        this.AIcolor = "blue" //also second player
         this.currentBoard = new Board();
-        this.nextTurn = "red";
+        this.playVsCPU = playVsCPU;
+        if(playVsCPU) this.myAI = new ArtificialIntelligence(this.AIcolor, this.playerColor);
+        this.nextTurn = this.playerColor;
         this.addListeners();
         this.cleanBoard();
     }
@@ -169,7 +173,11 @@ class Game{
         let coordY = this.currentBoard.setNode(coordX, this.nextTurn);
         if (coordY !==null){
             document.querySelector(`#js-board-x${coordX}y${coordY}`).className = "board__token board__token--"+this.nextTurn;
-            this.switchTurn();
+            if (this.playVsCPU === true){
+                this.doCPUmovement();
+            }else {
+                this.switchTurn();
+            }
             this.isAnyoneWinner();
         }
     }
@@ -181,23 +189,33 @@ class Game{
         document.querySelector("#js-turn").innerHTML = 'Siguiente turno: <span class="turn__indicator turn__indicator--red" id="js-turn-indicator">red</span>.';
     }
     switchTurn(){
-        if(this.nextTurn === "red"){
-            this.nextTurn = "blue";
+        if(this.nextTurn === this.playerColor){
+            this.nextTurn = this.AIcolor;
         }else {
-            this.nextTurn = "red";
+            this.nextTurn = this.playerColor;
         }
         document.querySelector("#js-turn-indicator").innerHTML = this.nextTurn;
         document.querySelector("#js-turn-indicator").className = "turn__indicator turn__indicator--"+this.nextTurn;
     }
+    doCPUmovement(){
+        let coordX = this.myAI.getBestColumn(this.currentBoard);
+        let coordY = this.currentBoard.setNode(coordX, this.AIcolor);
+        document.querySelector(`#js-board-x${coordX}y${coordY}`).className = "board__token board__token--"+this.AIcolor;
+    }
     isAnyoneWinner(){
         let winnerColor;
-        if(this.currentBoard.isMatchPattern(["red", "red", "red", "red"])[0] === true){
-            winnerColor = "red";
+        if(this.currentBoard.isMatchPattern([this.playerColor, this.playerColor, this.playerColor, this.playerColor])[0] === true){
+            winnerColor = this.playerColor;
             document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
+            document.querySelector("#js-exit-btn").value = "Salir";
             this.removeListeners();
-        }else if(this.currentBoard.isMatchPattern(["blue", "blue", "blue", "blue"])[0] === true){
-            winnerColor = "blue";
-            document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
+        }else if(this.currentBoard.isMatchPattern([this.AIcolor, this.AIcolor, this.AIcolor, this.AIcolor])[0] === true){
+            winnerColor = this.AIcolor;
+            if(this.playVsCPU){
+                document.querySelector("#js-turn").innerHTML = `¡La CPU gana la partida!`;
+            }else {
+                document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
+            }
             this.removeListeners();
         }else if(this.currentBoard.emptySquares === 0){
             document.querySelector("#js-turn").innerHTML = "¡Empate! La partida ha terminado sin ganador.";
@@ -231,44 +249,19 @@ class Game{
  */
 
 class ArtificialIntelligence{
-    constructor(currentGame){
-        this.referenceCurrentGame = currentGame;
-        this.AIcolor = "blue";
-        this.playerColor = "red";
+    constructor(AIcolor, playerColor){
+        this.AIcolor = AIcolor;
+        this.playerColor = playerColor;
     }
-    #copyArray2D(sourceArray){
-        let objetiveArray = [...sourceArray].map(row => [...row]);
-        return objetiveArray;
-    }
+    // #copyArray2D(sourceArray){ //delete tras comprobar que funciona copyBoard
+    //     let objetiveArray = [...sourceArray].map(row => [...row]);
+    //     return objetiveArray;
+    // }
     copyBoard(board){
         let copiedBoard = new Board();
-        copiedBoard.gridArray = this.#copyArray2D(board.gridArray);
+        copiedBoard.gridArray = [...(board.gridArray)].map(row => [...row]); //this.#copyArray2D(board.gridArray);
         copiedBoard.emptySquares = board.emptySquares;
         return copiedBoard;
-    }
-    getBestColumn(){
-        let board = this.currentGame.currentBoard;
-        let bestColumn = undefined;
-
-        bestColumn = this.getWinnerMove(board, this.AIcolor) //cpu
-        if (bestColumn === undefined){
-            bestColumn = this.getWinnerMove(board, this.playerColor) //player
-        }
-        if (bestColumn === undefined){
-            let bestScoreColumn = getBestScore(board, this.AIcolor) //cpu
-            if(!this.isGivingWinMove(board, bestScoreColumn)){
-                bestColumn = bestScoreColumn;
-            }
-        }
-        if (bestColumn === undefined){
-            let bestScoreColumn = getBestScore(board, this.playerColor) //cpu
-            if(!this.isGivingWinMove(board, bestScoreColumn)){
-                bestColumn = bestScoreColumn;
-            }
-        }
-        if (bestColumn === undefined){
-            bestColumn = this.getPartialRandomColumn(board);
-        }
     }
     getWinnerMove(board, color){
         let searchingBoard;
@@ -303,8 +296,8 @@ class ArtificialIntelligence{
                 searchPatternResults[1] = searchingBoard.isMatchPattern([color, color, undefined, color]);
                 searchPatternResults[2] = searchingBoard.isMatchPattern([color, undefined, color, color]);
                 searchPatternResults[3] = searchingBoard.isMatchPattern([undefined, color, color, color]);
-                for (result of searchPatternResults){
-                    if (result[0] === true) chosenColumns.push(i);
+                for (let j = 0; j < searchPatternResults.length; j++){
+                    if (searchPatternResults[j][0] === true) chosenColumns.push(i);
                 }
             }
         }
@@ -346,11 +339,79 @@ class ArtificialIntelligence{
         }
         return chosenColumn;
     }
+    getBestColumn(board){
+        let bestColumn = undefined;
+        bestColumn = this.getWinnerMove(board, this.AIcolor) //cpu
+        if (bestColumn === undefined){
+            bestColumn = this.getWinnerMove(board, this.playerColor) //player
+        }
+        if (bestColumn === undefined){
+            bestColumn = this.getBestScore(board, this.AIcolor) //cpu
+        }
+        if (bestColumn === undefined){
+            bestColumn = this.getBestScore(board, this.playerColor) //player
+        }
+        if (bestColumn === undefined){
+            bestColumn = this.getPartialRandomColumn(board);
+        }
+        return bestColumn;
+    }
 }
 
-let myGame = new Game();
+class Menu{
+    constructor(){
+        this.myGame;
+        this.CPUplayer;
+        this.addListeners();
+        this.showMenu();
+    }
+    addListeners(){
+        // document.querySelector("#js-reset-button").addEventListener("click", this);
+        document.querySelector("#js-play-one-vs-one-btn").addEventListener("click", this);
+        document.querySelector("#js-play-vs-cpu-btn").addEventListener("click", this);
+        document.querySelector("#js-exit-btn").addEventListener("click", this);
+    }
+    handleEvent(event){
+        switch(event.target.id){
+            case "js-play-vs-cpu-btn":
+                this.playOne();
+                break;
+            case "js-play-one-vs-one-btn":
+                this.playTwo()
+                break;
+            case "js-exit-btn":
+                this.exitGame();
+                this.showMenu();
+                break;
+        }
+    }
+    exitGame(){
+        this.myGame.removeListeners();
+        this.myGame = undefined;
+        this.showMenu();
+    }
+    playOne(){
+        this.showGame();
+        this.myGame = new Game(true);
+        document.querySelector("#js-exit-btn").value = "Rendirse";
+    }
+    playTwo(){
+        this.showGame();
+        this.myGame = new Game(false);
+    }
+    showMenu(){
+        document.querySelector("#js-board").className = "board board--hidden";
+        document.querySelector("#js-turn").className = "turn turn--hidden";
+        document.querySelector("#js-exit-btn").className = "exit exit--hidden";
+        document.querySelector("#js-exit-btn").value = "Salir";
+        document.querySelector("#js-menu").className = "menu";
+    }
+    showGame(){
+        document.querySelector("#js-board").className = "board";
+        document.querySelector("#js-turn").className = "turn";
+        document.querySelector("#js-exit-btn").className = "exit";
+        document.querySelector("#js-menu").className = "menu menu--hidden";
+    }
+}
 
-document.querySelector("#js-reset-button").addEventListener("click", () => {
-    myGame.removeListeners();
-    myGame = new Game();
-})
+const myMenu = new Menu();
