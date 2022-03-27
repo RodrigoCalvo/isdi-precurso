@@ -149,6 +149,78 @@ class Game{
     }
 }
 
+class ArtificialIntelligence{
+    constructor(currentGame){
+        this.referenceCurrentGame = currentGame;
+        // this.lastNodeAdded;
+        // this.preLastNodeAdded;
+        this.AIcolor = "blue";
+        this.playerColor = "red";
+    }
+    #copyArray2D(sourceArray){
+        let objetiveArray = [...sourceArray].map(row => [...row]);
+        return objetiveArray;
+    }
+    copyBoard(board){
+        let copiedBoard = new Board();
+        copiedBoard.gridArray = this.#copyArray2D(board.gridArray);
+        copiedBoard.emptySquares = board.emptySquares;
+        return copiedBoard;
+    }
+    getBestColumn(){
+        let board = this.currentGame.currentBoard;
+        let bestColumn = undefined;
+
+        bestColumn = this.getWinnerMove(board, this.AIcolor) //cpu
+        if (bestColumn === undefined){
+            bestColumn = this.getWinnerMove(board, this.playerColor) //player
+        }
+        if (bestColumn === undefined){
+            let bestScoreColumn = getBestScore(board, this.AIcolor) //cpu
+            if(!this.isGivingWinMove(board, bestScoreColumn)){
+                bestColumn = bestScoreColumn;
+            }
+        }
+        if (bestColumn === undefined){
+            let bestScoreColumn = getBestScore(board, this.playerColor) //cpu
+            if(!this.isGivingWinMove(board, bestScoreColumn)){
+                bestColumn = bestScoreColumn;
+            }
+        }
+        if (bestColumn === undefined){
+            // if(!this.isGivingWinMove()) getPartialRandomColumn()
+            // if(!this.isGivingWinMove()) getPartialRandomColumn(exclusions)
+
+        }
+    }
+    getWinnerMove(board, color){
+        let searchingBoard;
+        let winnerColumn;
+        for (let i = 0; i < board.gridArray.length; i++){
+            searchingBoard = this.copyBoard(board);
+            searchingBoard.setNode(i, color);
+            if (searchingBoard.isLineFour()[0] === true){
+                winnerColumn = i;
+                break;
+            }
+        }
+        return winnerColumn;
+    }
+    isGivingWinMove(board, col){ //from cpu to player
+        let guessingBoard = this.copyBoard(board);
+        guessingBoard.setNode(col, this.AIcolor);
+        if (this.getWinnerMove(guessingBoard, this.playerColor) !== undefined){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    getBestScore(board, color){
+        let searchingBoard = this.copyBoard(board);
+        
+    }
+}
+
 let myGame = new Game();
 
 document.querySelector("#js-reset-button").addEventListener("click", () => {
