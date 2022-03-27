@@ -11,45 +11,94 @@ class Node{
         this.coordY = coordY;
         this.color = color;
     }
-    checkN(gridArray){
+    check(gridArray, pattern){
+        let checked = true;
+        let i = 0;
+        do{
+            if(pattern[i] === undefined){
+                checked = gridArray[this.coordX][this.coordY+i] === undefined; 
+            }else {
+                if(gridArray[this.coordX][this.coordY+i] === undefined){
+                    checked = false;
+                }else {
+                    checked = pattern[i] === gridArray[this.coordX][this.coordY+i].color;
+                }
+            }
+            i++;
+        }while (checked && i < pattern.length);
+        return checked;
+    }
+    checkN(gridArray, pattern){
         if(this.coordY > 2) return false;
-        if(gridArray[this.coordX][this.coordY+1]!==undefined && gridArray[this.coordX][this.coordY+2]!==undefined && gridArray[this.coordX][this.coordY+3]!==undefined){
-            if(gridArray[this.coordX][this.coordY+1].color === this.color && gridArray[this.coordX][this.coordY+2].color === this.color && gridArray[this.coordX][this.coordY+3].color === this.color){
-                return true;
+        let checked = true;
+        let i = 0;
+        do{
+            if(pattern[i] === undefined){
+                checked = gridArray[this.coordX][this.coordY+i] === undefined; 
+            }else {
+                if(gridArray[this.coordX][this.coordY+i] === undefined){
+                    checked = false;
+                }else {
+                    checked = pattern[i] === gridArray[this.coordX][this.coordY+i].color;
+                }
             }
-        }else{
-            return false;
-        }
+            i++;
+        }while (checked && i < pattern.length);
+        return checked;
     }
-    checkNE(gridArray){
+    checkNE(gridArray, pattern){
         if(this.coordX > 3 || this.coordY > 2) return false;
-        if(gridArray[this.coordX+1][this.coordY+1]!==undefined && gridArray[this.coordX+2][this.coordY+2]!==undefined && gridArray[this.coordX+3][this.coordY+3]!==undefined){
-            if(gridArray[this.coordX+1][this.coordY+1].color === this.color && gridArray[this.coordX+2][this.coordY+2].color === this.color && gridArray[this.coordX+3][this.coordY+3].color === this.color){
-                return true;
+        let checked = true;
+        let i = 0;
+        do{
+            if(pattern[i] === undefined){
+                checked = gridArray[this.coordX+i][this.coordY+i] === undefined; 
+            }else {
+                if(gridArray[this.coordX+i][this.coordY+i] === undefined){
+                    checked = false;
+                }else {
+                    checked = pattern[i] === gridArray[this.coordX+i][this.coordY+i].color;
+                }
             }
-        }else{
-            return false;
-        }
+            i++;
+        }while (checked && i < pattern.length);
+        return checked;
     }
-    checkE(gridArray){
+    checkE(gridArray, pattern){
         if(this.coordX > 3) return false;
-        if(gridArray[this.coordX+1][this.coordY]!==undefined && gridArray[this.coordX+2][this.coordY]!==undefined && gridArray[this.coordX+3][this.coordY]!==undefined){
-            if(gridArray[this.coordX+1][this.coordY].color === this.color && gridArray[this.coordX+2][this.coordY].color === this.color && gridArray[this.coordX+3][this.coordY].color === this.color){
-                return true;
+        let checked = true;
+        let i = 0;
+        do{
+            if(pattern[i] === undefined){
+                checked = gridArray[this.coordX+i][this.coordY] === undefined; 
+            }else {
+                if(gridArray[this.coordX+i][this.coordY] === undefined){
+                    checked = false;
+                }else {
+                    checked = pattern[i] === gridArray[this.coordX+i][this.coordY].color;
+                }
             }
-        }else{
-            return false;
-        }
+            i++;
+        }while (checked && i < pattern.length);
+        return checked;
     }
-    checkSE(gridArray){
-        if (this.coordX > 3 || this.coordY < 3) return false;
-        if(gridArray[this.coordX+1][this.coordY-1]!==undefined && gridArray[this.coordX+2][this.coordY-2]!==undefined && gridArray[this.coordX+3][this.coordY-3]!==undefined){
-            if(gridArray[this.coordX+1][this.coordY-1].color === this.color && gridArray[this.coordX+2][this.coordY-2].color === this.color && gridArray[this.coordX+3][this.coordY-3].color === this.color){
-                return true;
+    checkSE(gridArray, pattern){
+        if(this.coordX > 3 || this.coordY < 3) return false;
+        let checked = true;
+        let i = 0;
+        do{
+            if(pattern[i] === undefined){
+                checked = gridArray[this.coordX+i][this.coordY-i] === undefined; 
+            }else {
+                if(gridArray[this.coordX+i][this.coordY-i] === undefined){
+                    checked = false;
+                }else {
+                    checked = pattern[i] === gridArray[this.coordX+i][this.coordY-i].color;
+                }
             }
-        }else{
-            return false;
-        }
+            i++;
+        }while (checked && i < pattern.length);
+        return checked;
     }
 }
 class Board{
@@ -67,15 +116,19 @@ class Board{
             return null;
         }
     }
-    isLineFour(){
-        for(let i = 0; i < this.gridArray.length; i++){
-            for (let j = 0; j < this.gridArray[i].length-1; j++){ //-1 por los end
-                if(this.gridArray[i][j] !== undefined){
-                    if(this.gridArray[i][j].checkN(this.gridArray) || this.gridArray[i][j].checkNE(this.gridArray) || this.gridArray[i][j].checkE(this.gridArray) || this.gridArray[i][j].checkSE(this.gridArray)){
-                        return [true, this.gridArray[i][j].color];
+    isMatchPattern(pattern){
+        if (pattern[0] !== undefined){
+            for(let i = 0; i < this.gridArray.length; i++){
+                for (let j = 0; j < this.gridArray[i].length-1; j++){ //-1 por los end
+                    if(this.gridArray[i][j] !== undefined){
+                        if(this.gridArray[i][j].checkN(this.gridArray, pattern) || this.gridArray[i][j].checkNE(this.gridArray, pattern) || this.gridArray[i][j].checkE(this.gridArray, pattern) || this.gridArray[i][j].checkSE(this.gridArray, pattern)){
+                            return [true, i];
+                        }
                     }
                 }
             }
+        }else { //patrones undefined color color color
+            //
         }
         return [false, undefined];
     }
@@ -137,23 +190,49 @@ class Game{
         document.querySelector("#js-turn-indicator").className = "turn__indicator turn__indicator--"+this.nextTurn;
     }
     isAnyoneWinner(){
-        let results = this.currentBoard.isLineFour();
-        if(results[0]){
-            document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${results[1]}" id="js-turn-indicator">${results[1]}</span> gana la partida!`;
+        let winnerColor;
+        if(this.currentBoard.isMatchPattern(["red", "red", "red", "red"])[0] === true){
+            winnerColor = "red";
+            document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
             this.removeListeners();
-        }
-        if(this.currentBoard.emptySquares === 0){
+        }else if(this.currentBoard.isMatchPattern(["blue", "blue", "blue", "blue"])[0] === true){
+            winnerColor = "blue";
+            document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
+            this.removeListeners();
+        }else if(this.currentBoard.emptySquares === 0){
             document.querySelector("#js-turn").innerHTML = "¡Empate! La partida ha terminado sin ganador.";
             this.removeListeners();
         }
     }
 }
 
+/*
+ * El algoritmo de juego que implementa esta clase es el siguiente:
+ * 
+ * La IA realiza los siguientes pasos
+ * - Si existe un movimiento que da la victoria, se realiza
+ * - Si existe un movimiento que impide la victoria al adversario, se realiza
+ * 
+ *     A partir de este momento, el resto de movimientos tienen una comprobación
+ *     previa: Si el siguiente movimiento da la victoria al adversario, no se
+ *     realiza. Esta comprobación continua hasta el último paso
+ * 
+ * - Si existen movimientos que aproximan la victoria (movimientos BestScore) de la IA,
+ *   tras los cuales habrá líneas con tres fichas del color de la IA y un espacio
+ *   a los lados o entre las fichas, se realiza uno de esos movimientos al azar
+ * - Si existen movimientos que aproximan la victoria (movimientos BestScore) del jugador,
+ *   tras los cuales habrá líneas con tres fichas del color del jugador y un espacio
+ *   a los lados o entre las fichas, se bloquea con el movimiento de IA una de esas
+ *   posibilidades al azar
+ * - Si se puede efectuar movimiento en la columna central, se realiza
+ * - Se elige un movimiento al azar en una columna no llena
+ * - Se elige un movimiento al azar en una columna no llena que conlleva perder la partida
+ * 
+ */
+
 class ArtificialIntelligence{
     constructor(currentGame){
         this.referenceCurrentGame = currentGame;
-        // this.lastNodeAdded;
-        // this.preLastNodeAdded;
         this.AIcolor = "blue";
         this.playerColor = "red";
     }
@@ -197,16 +276,16 @@ class ArtificialIntelligence{
         for (let i = 0; i < board.gridArray.length; i++){
             searchingBoard = this.copyBoard(board);
             searchingBoard.setNode(i, color);
-            if (searchingBoard.isLineFour()[0] === true){
+            if (searchingBoard.isMatchPattern([color, color, color, color][0]) === true){
                 winnerColumn = i;
                 break;
             }
         }
         return winnerColumn;
     }
-    isGivingWinMove(board, col){ //from cpu to player
+    isGivingWinMove(board, column){ //from cpu to player
         let guessingBoard = this.copyBoard(board);
-        guessingBoard.setNode(col, this.AIcolor);
+        guessingBoard.setNode(column, this.AIcolor);
         if (this.getWinnerMove(guessingBoard, this.playerColor) !== undefined){
             return true;
         }else {
@@ -214,34 +293,58 @@ class ArtificialIntelligence{
         }
     }
     getBestScore(board, color){
-        let choosenColumn;
-        let searchingBoard = this.copyBoard(board);
-        //buscar patrones de dos #color juntos, con dos undefined en línea
-        //
-        //
-        return choosenColumn;
-    }
-    getPartialRandomColumn(board){
-        let choosenColumn = 3; //por defecto, el centro
-        let posibleColumns = [0, 1, 2, 4, 5, 6];
-        if (board.getFirstEmptyPlace(choosenColumn) === null){
+        let chosenColumns = [];
+        let searchingBoard;
+        for(let i = 0; i < board.gridArray.length; i++){
+            searchingBoard = this.copyBoard(board);
+            if(searchingBoard.setNode(i, color) !== null){
+                let searchPatternResults = [];
+                searchPatternResults[0] = searchingBoard.isMatchPattern([color, color, color, undefined]);
+                searchPatternResults[1] = searchingBoard.isMatchPattern([color, color, undefined, color]);
+                searchPatternResults[2] = searchingBoard.isMatchPattern([color, undefined, color, color]);
+                searchPatternResults[3] = searchingBoard.isMatchPattern([undefined, color, color, color]);
+                for (result of searchPatternResults){
+                    if (result[0] === true) chosenColumns.push(i);
+                }
+            }
+        }
+        if (chosenColumns.length !== 0){
+            let chosenColumn;
             let avalaibleColumn = false;
             do{
-                choosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
-                if (board.getFirstEmptyPlace(choosenColumn) !== null){
-                    avalaibleColumn = !this.isGivingWinMove(board, choosenColumn);
+                chosenColumn = (chosenColumns.splice(Math.random() * chosenColumns.length, 1))[0]; //getBestValue(chosenColumns)
+                avalaibleColumn = !this.isGivingWinMove(board, chosenColumn);
+            } while(!avalaibleColumn && chosenColumns.length > 0);
+            if(avalaibleColumn === true){
+                return chosenColumn;
+            }else {
+                return undefined;
+            }
+        }else {
+            return undefined;
+        }
+    }
+    getPartialRandomColumn(board){
+        let chosenColumn = 3; //por defecto, el centro
+        let posibleColumns = [0, 1, 2, 4, 5, 6];
+        if (board.getFirstEmptyPlace(chosenColumn) === null){
+            let avalaibleColumn = false;
+            do{
+                chosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
+                if (board.getFirstEmptyPlace(chosenColumn) !== null){
+                    avalaibleColumn = !this.isGivingWinMove(board, chosenColumn);
                 }
             } while(!avalaibleColumn && posibleColumns.length > 0);
             if (avalaibleColumn === true){
-                return choosenColumn;
+                return chosenColumn;
             }else { //cpu ha perdido, columna al azar no llena
                 posibleColumns = [0, 1, 2, 4, 5, 6];
                 do{
-                    choosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
-                }while(board.getFirstEmptyPlace(choosenColumn) === null && posibleColumns.length > 0);
+                    chosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
+                }while(board.getFirstEmptyPlace(chosenColumn) === null && posibleColumns.length > 0);
             }
         }
-        return choosenColumn;
+        return chosenColumn;
     }
 }
 
