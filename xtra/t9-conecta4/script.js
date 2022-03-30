@@ -197,6 +197,22 @@ class ArtificialIntelligence{
         copiedBoard.emptySquares = board.emptySquares;
         return copiedBoard;
     }
+    getMostCommonValue(numbersArray){
+        //stackoverflow-inspired
+        let ranking = numbersArray.reduce((totals, num) => {
+            if (!totals[num]) totals[num] = 0;
+            totals[num]++;
+            return totals;
+        }, {});
+        let rankingKeys = Object.keys(ranking);
+        let max = Math.min(...rankingKeys);
+        rankingKeys.forEach((num) => {
+            if (ranking[num] > ranking[max]) {
+                max = num;
+            }
+        });
+        return [Number.parseInt(max), ranking[max]]; //array [number, occurrences]
+    }
     getWinnerMove(board, color){
         let searchingBoard;
         let winnerColumn;
@@ -239,7 +255,8 @@ class ArtificialIntelligence{
             let chosenColumn;
             let avalaibleColumn = false;
             do{
-                chosenColumn = (chosenColumns.splice(Math.random() * chosenColumns.length, 1))[0]; //getBestValue(chosenColumns)
+                let bestValue = this.getMostCommonValue(chosenColumns);
+                chosenColumn = (chosenColumns.splice(chosenColumns.indexOf(bestValue[0]), bestValue[1]))[0];
                 avalaibleColumn = !this.isGivingWinMove(board, chosenColumn);
             } while(!avalaibleColumn && chosenColumns.length > 0);
             if(avalaibleColumn === true){
