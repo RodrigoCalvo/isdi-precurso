@@ -3,6 +3,8 @@
 }
 .menu__info{
     text-indent: 1rem;
+    width: 15rem;
+    text-align: justify;
 }
 .menu__button{
     margin: 1rem 0 1rem 1rem;

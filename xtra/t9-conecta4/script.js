@@ -1,10 +1,3 @@
-// botón "Salir" <-- innecesario? 
-// pedir volver a jugar <-- ya hay reiniciar, innecesario?
-// ¿quizás menú de portada?
-
-// CONECTA 4 Pro <-- aquí sí que hace falta menú
-// Se tiene que añadir la opción de jugar contra la máquina. Antes de iniciar la partida se le pedirá al jugador si tiene un compañero con quien jugar o quiere jugar contra la máquina.
-
 class Node{
     constructor(coordX, coordY, color){
         this.coordX = coordX;
@@ -259,7 +252,7 @@ class ArtificialIntelligence{
         }
     }
     getPartialRandomColumn(board){
-        let chosenColumn = 3; //por defecto, el centro
+        let chosenColumn = 3; //default: middle
         let posibleColumns = [0, 1, 2, 4, 5, 6];
         if (board.getFirstEmptyPlace(chosenColumn) === null){
             let avalaibleColumn = false;
@@ -270,9 +263,8 @@ class ArtificialIntelligence{
                 }
             } while(!avalaibleColumn && posibleColumns.length > 0);
             if (avalaibleColumn === true){
-                console.log("al azar");
                 return chosenColumn;
-            }else { //cpu ha perdido, columna al azar no llena
+            }else { //cpu has lost, random not-full column
                 posibleColumns = [0, 1, 2, 4, 5, 6];
                 do{
                     chosenColumn = (posibleColumns.splice(Math.random() * posibleColumns.length, 1))[0];
@@ -283,15 +275,15 @@ class ArtificialIntelligence{
     }
     getBestColumn(board){
         let bestColumn = undefined;
-        bestColumn = this.getWinnerMove(board, this.AIcolor) //cpu
+        bestColumn = this.getWinnerMove(board, this.AIcolor)
         if (bestColumn === undefined){
-            bestColumn = this.getWinnerMove(board, this.playerColor) //player
+            bestColumn = this.getWinnerMove(board, this.playerColor)
         }
         if (bestColumn === undefined){
-            bestColumn = this.getBestScore(board, this.AIcolor) //cpu
+            bestColumn = this.getBestScore(board, this.AIcolor)
         }
         if (bestColumn === undefined){
-            bestColumn = this.getBestScore(board, this.playerColor) //player
+            bestColumn = this.getBestScore(board, this.playerColor)
         }
         if (bestColumn === undefined){
             bestColumn = this.getPartialRandomColumn(board);
@@ -308,7 +300,6 @@ class Menu{
         this.showMenu();
     }
     addListeners(){
-        // document.querySelector("#js-reset-button").addEventListener("click", this);
         document.querySelector("#js-play-one-vs-one-btn").addEventListener("click", this);
         document.querySelector("#js-play-vs-cpu-btn").addEventListener("click", this);
         document.querySelector("#js-exit-btn").addEventListener("click", this);
@@ -316,30 +307,20 @@ class Menu{
     handleEvent(event){
         switch(event.target.id){
             case "js-play-vs-cpu-btn":
-                this.playOne();
+                this.showGame();
+                this.myGame = new Game(true);
+                document.querySelector("#js-exit-btn").value = "Rendirse";
                 break;
             case "js-play-one-vs-one-btn":
-                this.playTwo()
+                this.showGame();
+                this.myGame = new Game(false);
                 break;
             case "js-exit-btn":
-                this.exitGame();
+                this.myGame.removeListeners();
+                this.myGame = undefined;
                 this.showMenu();
                 break;
         }
-    }
-    exitGame(){
-        this.myGame.removeListeners();
-        this.myGame = undefined;
-        this.showMenu();
-    }
-    playOne(){
-        this.showGame();
-        this.myGame = new Game(true);
-        document.querySelector("#js-exit-btn").value = "Rendirse";
-    }
-    playTwo(){
-        this.showGame();
-        this.myGame = new Game(false);
     }
     showMenu(){
         document.querySelector("#js-board").className = "board board--hidden";
