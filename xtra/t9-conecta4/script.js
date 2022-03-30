@@ -253,13 +253,9 @@ class ArtificialIntelligence{
         this.AIcolor = AIcolor;
         this.playerColor = playerColor;
     }
-    // #copyArray2D(sourceArray){ //delete tras comprobar que funciona copyBoard
-    //     let objetiveArray = [...sourceArray].map(row => [...row]);
-    //     return objetiveArray;
-    // }
     copyBoard(board){
         let copiedBoard = new Board();
-        copiedBoard.gridArray = [...(board.gridArray)].map(row => [...row]); //this.#copyArray2D(board.gridArray);
+        copiedBoard.gridArray = [...(board.gridArray)].map(row => [...row]);
         copiedBoard.emptySquares = board.emptySquares;
         return copiedBoard;
     }
