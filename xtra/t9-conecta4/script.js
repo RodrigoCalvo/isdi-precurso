@@ -11,90 +11,33 @@ class Node{
         this.coordY = coordY;
         this.color = color;
     }
-    check(gridArray, pattern){
+    check(gridArray, pattern, direction){
+        let shiftX = 1;
+        let shiftY = 1;
+        let exit = false;
+        switch(direction){
+            case "N":
+                shiftX = 0;
+                if(this.coordY > 2) exit = true;
+                break;
+            case "NE":
+                if(this.coordX > 3 || this.coordY > 2) exit = true;
+                break;
+            case "E":
+                shiftY = 0;
+                if(this.coordX > 3) exit = true;
+                break;
+            case "SE":
+                shiftY = -1;
+                if(this.coordX > 3 || this.coordY < 3) exit = true;
+                break;
+        }
+        if (exit) return false;
         let checked = true;
         let i = 0;
         do{
-            if(pattern[i] === undefined){
-                checked = gridArray[this.coordX][this.coordY+i] === undefined; 
-            }else {
-                if(gridArray[this.coordX][this.coordY+i] === undefined){
-                    checked = false;
-                }else {
-                    checked = pattern[i] === gridArray[this.coordX][this.coordY+i].color;
-                }
-            }
-            i++;
-        }while (checked && i < pattern.length);
-        return checked;
-    }
-    checkN(gridArray, pattern){
-        if(this.coordY > 2) return false;
-        let checked = true;
-        let i = 0;
-        do{
-            if(pattern[i] === undefined){
-                checked = gridArray[this.coordX][this.coordY+i] === undefined; 
-            }else {
-                if(gridArray[this.coordX][this.coordY+i] === undefined){
-                    checked = false;
-                }else {
-                    checked = pattern[i] === gridArray[this.coordX][this.coordY+i].color;
-                }
-            }
-            i++;
-        }while (checked && i < pattern.length);
-        return checked;
-    }
-    checkNE(gridArray, pattern){
-        if(this.coordX > 3 || this.coordY > 2) return false;
-        let checked = true;
-        let i = 0;
-        do{
-            if(pattern[i] === undefined){
-                checked = gridArray[this.coordX+i][this.coordY+i] === undefined; 
-            }else {
-                if(gridArray[this.coordX+i][this.coordY+i] === undefined){
-                    checked = false;
-                }else {
-                    checked = pattern[i] === gridArray[this.coordX+i][this.coordY+i].color;
-                }
-            }
-            i++;
-        }while (checked && i < pattern.length);
-        return checked;
-    }
-    checkE(gridArray, pattern){
-        if(this.coordX > 3) return false;
-        let checked = true;
-        let i = 0;
-        do{
-            if(pattern[i] === undefined){
-                checked = gridArray[this.coordX+i][this.coordY] === undefined; 
-            }else {
-                if(gridArray[this.coordX+i][this.coordY] === undefined){
-                    checked = false;
-                }else {
-                    checked = pattern[i] === gridArray[this.coordX+i][this.coordY].color;
-                }
-            }
-            i++;
-        }while (checked && i < pattern.length);
-        return checked;
-    }
-    checkSE(gridArray, pattern){
-        if(this.coordX > 3 || this.coordY < 3) return false;
-        let checked = true;
-        let i = 0;
-        do{
-            if(pattern[i] === undefined){
-                checked = gridArray[this.coordX+i][this.coordY-i] === undefined; 
-            }else {
-                if(gridArray[this.coordX+i][this.coordY-i] === undefined){
-                    checked = false;
-                }else {
-                    checked = pattern[i] === gridArray[this.coordX+i][this.coordY-i].color;
-                }
+            if(pattern[i] !== gridArray[this.coordX+(shiftX*i)][this.coordY+(shiftY*i)].color){
+                checked = false;
             }
             i++;
         }while (checked && i < pattern.length);
@@ -103,8 +46,19 @@ class Node{
 }
 class Board{
     constructor(){
-        this.gridArray = [[,,,,,,"end"],[,,,,,,"end"],[,,,,,,"end"],[,,,,,,"end"],[,,,,,,"end"],[,,,,,,"end"],[,,,,,,"end"]];
+        this.gridArray = this.fillGrid();
         this.emptySquares = 42; //grid 7x6
+    }
+    fillGrid(){
+        let gridArray = [];
+        for(let i = 0; i < 7; i++){
+            let auxArray = [];
+            for (let j = 0; j < 6; j++){
+                auxArray.push(new Node(i, j, "white"));
+            }
+            gridArray.push(auxArray);
+        }
+        return gridArray;
     }
     setNode(coordX, color){
         let emptyCoordY = this.getFirstEmptyPlace(coordX);
@@ -117,24 +71,22 @@ class Board{
         }
     }
     isMatchPattern(pattern){
-        if (pattern[0] !== undefined){
-            for(let i = 0; i < this.gridArray.length; i++){
-                for (let j = 0; j < this.gridArray[i].length-1; j++){ //-1 por los end
-                    if(this.gridArray[i][j] !== undefined){
-                        if(this.gridArray[i][j].checkN(this.gridArray, pattern) || this.gridArray[i][j].checkNE(this.gridArray, pattern) || this.gridArray[i][j].checkE(this.gridArray, pattern) || this.gridArray[i][j].checkSE(this.gridArray, pattern)){
-                            return [true, i];
-                        }
-                    }
+        for(let i = 0; i < this.gridArray.length; i++){
+            for (let j = 0; j < this.gridArray[i].length; j++){
+                if(this.gridArray[i][j].check(this.gridArray, pattern, "N") ||
+                 this.gridArray[i][j].check(this.gridArray, pattern, "NE") || 
+                 this.gridArray[i][j].check(this.gridArray, pattern, "E") || 
+                 this.gridArray[i][j].check(this.gridArray, pattern, "SE")){
+                    return true;
                 }
             }
-        }else { //patrones undefined color color color
-            //
         }
-        return [false, undefined];
+        return false;
     }
     getFirstEmptyPlace(column){
         let coordY = 0
-        while(this.gridArray[column][coordY]!==undefined) coordY++;
+        while(coordY < 6 && this.gridArray[column][coordY].color !== "white") coordY++;
+
         return coordY < 6 ? coordY : null;
     }
 }
@@ -151,22 +103,14 @@ class Game{
         this.cleanBoard();
     }
     addListeners(){
-        document.querySelector("#js-supboard-x0").addEventListener("click", this);
-        document.querySelector("#js-supboard-x1").addEventListener("click", this);
-        document.querySelector("#js-supboard-x2").addEventListener("click", this);
-        document.querySelector("#js-supboard-x3").addEventListener("click", this);
-        document.querySelector("#js-supboard-x4").addEventListener("click", this);
-        document.querySelector("#js-supboard-x5").addEventListener("click", this);
-        document.querySelector("#js-supboard-x6").addEventListener("click", this);
+        document.querySelectorAll(".board__control-square").forEach((element) => {
+            element.addEventListener("click", this);
+        });
     }
     removeListeners(){
-        document.querySelector("#js-supboard-x0").removeEventListener("click", this);
-        document.querySelector("#js-supboard-x1").removeEventListener("click", this);
-        document.querySelector("#js-supboard-x2").removeEventListener("click", this);
-        document.querySelector("#js-supboard-x3").removeEventListener("click", this);
-        document.querySelector("#js-supboard-x4").removeEventListener("click", this);
-        document.querySelector("#js-supboard-x5").removeEventListener("click", this);
-        document.querySelector("#js-supboard-x6").removeEventListener("click", this);
+        document.querySelectorAll(".board__control-square").forEach((element) => {
+            element.removeEventListener("click", this);
+        });
     }
     handleEvent(event){
         let coordX = event.target.id[event.target.id.length-1];
@@ -204,12 +148,12 @@ class Game{
     }
     isAnyoneWinner(){
         let winnerColor;
-        if(this.currentBoard.isMatchPattern([this.playerColor, this.playerColor, this.playerColor, this.playerColor])[0] === true){
+        if(this.currentBoard.isMatchPattern([this.playerColor, this.playerColor, this.playerColor, this.playerColor]) === true){
             winnerColor = this.playerColor;
             document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
             document.querySelector("#js-exit-btn").value = "Salir";
             this.removeListeners();
-        }else if(this.currentBoard.isMatchPattern([this.AIcolor, this.AIcolor, this.AIcolor, this.AIcolor])[0] === true){
+        }else if(this.currentBoard.isMatchPattern([this.AIcolor, this.AIcolor, this.AIcolor, this.AIcolor]) === true){
             winnerColor = this.AIcolor;
             if(this.playVsCPU){
                 document.querySelector("#js-turn").innerHTML = `¡La CPU gana la partida!`;
@@ -252,6 +196,7 @@ class ArtificialIntelligence{
     constructor(AIcolor, playerColor){
         this.AIcolor = AIcolor;
         this.playerColor = playerColor;
+        this.blankColor = "white";
     }
     copyBoard(board){
         let copiedBoard = new Board();
@@ -265,7 +210,7 @@ class ArtificialIntelligence{
         for (let i = 0; i < board.gridArray.length; i++){
             searchingBoard = this.copyBoard(board);
             searchingBoard.setNode(i, color);
-            if (searchingBoard.isMatchPattern([color, color, color, color][0]) === true){
+            if (searchingBoard.isMatchPattern([color, color, color, color]) === true){
                 winnerColumn = i;
                 break;
             }
@@ -288,12 +233,12 @@ class ArtificialIntelligence{
             searchingBoard = this.copyBoard(board);
             if(searchingBoard.setNode(i, color) !== null){
                 let searchPatternResults = [];
-                searchPatternResults[0] = searchingBoard.isMatchPattern([color, color, color, undefined]);
-                searchPatternResults[1] = searchingBoard.isMatchPattern([color, color, undefined, color]);
-                searchPatternResults[2] = searchingBoard.isMatchPattern([color, undefined, color, color]);
-                searchPatternResults[3] = searchingBoard.isMatchPattern([undefined, color, color, color]);
+                searchPatternResults[0] = searchingBoard.isMatchPattern([color, color, color, this.blankColor]);
+                searchPatternResults[1] = searchingBoard.isMatchPattern([color, color, this.blankColor, color]);
+                searchPatternResults[2] = searchingBoard.isMatchPattern([color, this.blankColor, color, color]);
+                searchPatternResults[3] = searchingBoard.isMatchPattern([this.blankColor, color, color, color]);
                 for (let j = 0; j < searchPatternResults.length; j++){
-                    if (searchPatternResults[j][0] === true) chosenColumns.push(i);
+                    if (searchPatternResults[j] === true) chosenColumns.push(i);
                 }
             }
         }
@@ -325,6 +270,7 @@ class ArtificialIntelligence{
                 }
             } while(!avalaibleColumn && posibleColumns.length > 0);
             if (avalaibleColumn === true){
+                console.log("al azar");
                 return chosenColumn;
             }else { //cpu ha perdido, columna al azar no llena
                 posibleColumns = [0, 1, 2, 4, 5, 6];
