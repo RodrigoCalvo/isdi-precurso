@@ -111,7 +111,9 @@ class Game{
         if (coordY !==null){
             document.querySelector(`#js-board-x${coordX}y${coordY}`).className = "board__token board__token--"+this.nextTurn;
             if (this.playVsCPU === true){
-                this.doCPUmovement();
+                if(!this.isAnyoneWinner()){
+                    this.doCPUmovement();
+                }
             }else {
                 this.switchTurn();
             }
@@ -141,6 +143,7 @@ class Game{
     }
     isAnyoneWinner(){
         let winnerColor;
+        let anyWinner = true;
         if(this.currentBoard.isMatchPattern([this.playerColor, this.playerColor, this.playerColor, this.playerColor]) === true){
             winnerColor = this.playerColor;
             document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
@@ -150,6 +153,7 @@ class Game{
             winnerColor = this.AIcolor;
             if(this.playVsCPU){
                 document.querySelector("#js-turn").innerHTML = `¡La CPU gana la partida!`;
+                document.querySelector("#js-exit-btn").value = "Salir";
             }else {
                 document.querySelector("#js-turn").innerHTML = `¡El jugador <span  class="turn__indicator turn__indicator--${winnerColor}" id="js-turn-indicator">${winnerColor}</span> gana la partida!`;
             }
@@ -157,7 +161,10 @@ class Game{
         }else if(this.currentBoard.emptySquares === 0){
             document.querySelector("#js-turn").innerHTML = "¡Empate! La partida ha terminado sin ganador.";
             this.removeListeners();
+        }else {
+            anyWinner = false;
         }
+        return anyWinner;
     }
 }
 
@@ -197,8 +204,7 @@ class ArtificialIntelligence{
         copiedBoard.emptySquares = board.emptySquares;
         return copiedBoard;
     }
-    getMostCommonValue(numbersArray){
-        //stackoverflow-inspired
+    getMostCommonValue(numbersArray){ //stovfl
         let ranking = numbersArray.reduce((totals, num) => {
             if (!totals[num]) totals[num] = 0;
             totals[num]++;
@@ -312,7 +318,6 @@ class ArtificialIntelligence{
 class Menu{
     constructor(){
         this.myGame;
-        this.CPUplayer;
         this.addListeners();
         this.showMenu();
     }
