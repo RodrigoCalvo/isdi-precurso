@@ -160,6 +160,7 @@ class Game{
             this.removeListeners();
         }else if(this.currentBoard.emptySquares === 0){
             document.querySelector("#js-turn").innerHTML = "¡Empate! La partida ha terminado sin ganador.";
+            document.querySelector("#js-exit-btn").value = "Salir";
             this.removeListeners();
         }else {
             anyWinner = false;
@@ -346,15 +347,13 @@ class Menu{
     }
     showMenu(){
         document.querySelector("#js-board").className = "board board--hidden";
-        document.querySelector("#js-turn").className = "turn turn--hidden";
-        document.querySelector("#js-exit-btn").className = "exit exit--hidden";
+        document.querySelector("#js-board-hub").className = "board-hub board-hub--hidden";
         document.querySelector("#js-exit-btn").value = "Salir";
         document.querySelector("#js-menu").className = "menu";
     }
     showGame(){
+        document.querySelector("#js-board-hub").className = "board-hub";
         document.querySelector("#js-board").className = "board";
-        document.querySelector("#js-turn").className = "turn";
-        document.querySelector("#js-exit-btn").className = "exit";
         document.querySelector("#js-menu").className = "menu menu--hidden";
     }
 }
