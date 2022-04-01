@@ -326,6 +326,7 @@ class Menu{
         document.querySelector("#js-play-one-vs-one-btn").addEventListener("click", this);
         document.querySelector("#js-play-vs-cpu-btn").addEventListener("click", this);
         document.querySelector("#js-exit-btn").addEventListener("click", this);
+        document.querySelector("#js-bn-btn").addEventListener("click", this);
     }
     handleEvent(event){
         switch(event.target.id){
@@ -343,6 +344,9 @@ class Menu{
                 this.myGame = undefined;
                 this.showMenu();
                 break;
+            case "js-bn-btn":
+                this.changeStyle();
+                break;
         }
     }
     showMenu(){
@@ -355,6 +359,18 @@ class Menu{
         document.querySelector("#js-board-hub").className = "board-hub";
         document.querySelector("#js-board").className = "board";
         document.querySelector("#js-menu").className = "menu menu--hidden";
+    }
+    changeStyle(){
+        console.log("pista");
+        if (document.querySelector("#js-style-color").rel === "stylesheet"){
+            document.querySelector("#js-style-color").rel = "stylesheet alternate";
+            document.querySelector("#js-style-bn").rel = "stylesheet";
+            document.querySelector("#js-bn-btn").value = "Color";
+        }else {
+            document.querySelector("#js-style-color").rel = "stylesheet";
+            document.querySelector("#js-style-bn").rel = "stylesheet alternate";
+            document.querySelector("#js-bn-btn").value = "B/n";
+        }
     }
 }
 

@@ -1,0 +1,133 @@
+body{
+    background-color: rgb(0, 0, 0);
+    color: white;
+    font-family: "Nova Square", sans-serif;
+}
+.menu{
+    margin: auto;
+    display: flex;
+    font-size: min(1rem, 5vw);
+    flex-direction: column;
+    max-width: min(100vw, 40rem);
+    align-items: center;
+}
+.menu__info{
+    text-indent: 1rem;
+    text-align: justify;
+}
+.menu__title{
+    text-indent: -1rem;
+    font-size: min(8rem, 18vw);
+    text-shadow: rgb(128, 128, 128) min(5px, 1.5vw) min(5px, 1.5vw) 5px;
+    transform: scaleY(1.5);
+    transform: rotateY(205deg);
+    transform: rotateZ(-16deg);
+    margin: min(10rem, 20vw) auto;
+    text-align: center;
+    color: rgb(255, 255, 255);
+}
+.menu__title--red{
+    color: rgb(255, 255, 255);
+}
+.menu__info-text{
+    padding: min(1rem, 3vw);
+    border: 1px solid rgb(255, 255, 255);
+    background-color: rgb(0, 0, 0);
+    color: white;
+}
+.menu__button{
+    font-family: "Nova Square", sans-serif;
+    background-color: rgb(0, 0, 0);
+    border: 1px solid white;
+    color: white;
+    font-size: min(0.8rem, 5vw);
+    margin: auto;
+    max-width: fit-content;
+    padding: 1vw;
+    cursor: pointer;
+}
+.menu--hidden{
+    display: none;
+}
+.board-hub{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: min(100vw, 40rem);
+}
+.turn{
+    font-size: min(1.7rem, 7vw);
+    margin: min(1rem, 3vw);
+    font-weight: bold;
+}
+.turn__indicator{
+    text-transform: uppercase;
+}
+.turn__indicator--red{
+    color: rgb(100, 100, 100);
+}
+.turn__indicator--blue{
+    color: rgb(0, 0, 0);
+    -webkit-text-stroke: 1px rgb(46, 46, 46);
+}
+.exit{
+    font-family: "Nova Square", sans-serif;
+    background-color: rgb(0, 0, 0);
+    border: 1px white solid;
+    color: white;
+    font-size: min(1.2rem, 10vw);
+    width: min(18rem, 30vw);
+    padding: 1vw;
+    letter-spacing: min(0.5rem, 1vw);
+    margin: min(1rem, 3vw);
+    margin-bottom: min(2rem, 6vw);
+    cursor: pointer;
+}
+.board-hub--hidden{
+    display: none;
+}
+.board{
+    outline: rgb(255, 255, 255) 1px solid;
+    outline-offset: 3px;
+    margin: auto;
+    max-width: fit-content;
+    width: min(100vw, 40rem);
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    gap: 0.2rem;
+}
+.board__square{
+    background-color: rgb(200, 200, 200);
+    width: min(12.1vw, 4.8rem);
+    height: min(12.1vw, 4.8rem);
+}
+.board__control-square{
+    cursor: pointer;
+    /*dibujar flecha*/
+}
+.board__control-square:hover{
+    width: 0;
+    height: 0;
+    border-left: min(6vw, 2.4rem) solid transparent;
+    border-right: min(6vw, 2.4rem) solid transparent;
+    border-top: min(12.1vw, 4.8rem) solid rgba(0, 0, 0, 0.75);
+}
+.board__playable-square{
+    background-color: rgb(255, 255, 255);
+}
+.board__token{
+    width: min(12.1vw, 4.8rem);
+    height: min(12.1vw, 4.8rem);
+    border-radius: 50%;
+    margin: auto;
+}
+.board__token--red{
+    background-color: rgb(100, 100, 100);
+}
+.board__token--blue{
+    background-color: rgb(0, 0, 0);
+}
+.board--hidden{
+    display: none;
+}
