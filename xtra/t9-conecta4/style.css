@@ -75,6 +75,7 @@ body{
     color: white;
     font-size: min(1.2rem, 10vw);
     width: min(18rem, 30vw);
+    min-width: fit-content;
     padding: 1vw;
     letter-spacing: min(0.5rem, 1vw);
     margin: min(1rem, 3vw);
@@ -124,6 +125,9 @@ body{
 }
 .board__token--blue{
     background-color: rgba(0, 0, 255, 0.75);
+}
+.board--waiting{
+    cursor: wait;
 }
 .board--hidden{
     display: none;

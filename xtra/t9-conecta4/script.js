@@ -112,12 +112,20 @@ class Game{
             document.querySelector(`#js-board-x${coordX}y${coordY}`).className = "board__token board__token--"+this.nextTurn;
             if (this.playVsCPU === true){
                 if(!this.isAnyoneWinner()){
-                    this.doCPUmovement();
+                    this.removeListeners();
+                    document.querySelector("#js-board").className = "board board--waiting";
+                    let randomTime = Math.random()*1000 + 500;
+                    setTimeout(() => {
+                        this.doCPUmovement();
+                        this.addListeners();
+                        document.querySelector("#js-board").className = "board";
+                        this.isAnyoneWinner();
+                    }, randomTime);
                 }
             }else {
                 this.switchTurn();
+                this.isAnyoneWinner();
             }
-            this.isAnyoneWinner();
         }
     }
     cleanBoard(){
@@ -361,7 +369,6 @@ class Menu{
         document.querySelector("#js-menu").className = "menu menu--hidden";
     }
     changeStyle(){
-        console.log("pista");
         if (document.querySelector("#js-style-color").rel === "stylesheet"){
             document.querySelector("#js-style-color").rel = "stylesheet alternate";
             document.querySelector("#js-style-bn").rel = "stylesheet";
