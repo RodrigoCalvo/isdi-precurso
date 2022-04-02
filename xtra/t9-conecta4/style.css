@@ -104,12 +104,14 @@ body{
     cursor: pointer;
     /*dibujar flecha*/
 }
-.board__control-square:hover{
-    width: 0;
-    height: 0;
-    border-left: min(6vw, 2.4rem) solid transparent;
-    border-right: min(6vw, 2.4rem) solid transparent;
-    border-top: min(12.1vw, 4.8rem) solid rgba(255, 100, 0, 0.75);
+@media only screen and (min-width: 768px) {
+    .board__control-square:hover{
+        width: 0;
+        height: 0;
+        border-left: min(6vw, 2.4rem) solid transparent;
+        border-right: min(6vw, 2.4rem) solid transparent;
+        border-top: min(12.1vw, 4.8rem) solid rgba(255, 100, 0, 0.75);
+    }
 }
 .board__playable-square{
     background-color: rgb(162, 209, 209);
