@@ -3,28 +3,30 @@
  * 
  * @param number el número inscrito en el cuadrado
  */
-function Square(number){
-    this.number = number;
-    this.isMatched = false;
-    this.tryMatchSquare = function(numberToMatch){
-        if(this.number === numberToMatch){
-            this.isMatched = true;
-            return true;
-        }
-        return false;
+class Square {
+    constructor(number) {
+        this.number = number;
+        this.isMatched = false;
     }
-    this.isMatchedSquare = function(){
-        return this.isMatched;
+    tryMatchSquare(numberToMatch) {
+            if (this.number === numberToMatch) {
+                this.isMatched = true;
+                return true;
+            }
+            return false;
     }
-    this.showSquare = function(){
-        if (!this.isMatched){
-            return String(this.number);
-        }else {
-            return "X";
-        }
+    isMatchedSquare() {
+            return this.isMatched;
     }
-    this.showUnmatchedSquare = function(){
-        return this.number;
+    showSquare() {
+            if (!this.isMatched) {
+                return String(this.number);
+            } else {
+                return "X";
+            }
+    }
+    showUnmatchedSquare() {
+            return this.number;
     }
 }
 
@@ -33,33 +35,35 @@ function Square(number){
  *
  * @param squares array de objetos de tipo Square
  */
-function Line(squares){
-    this.squares = squares;
-    this.lineDone = false;
-    this.tryMatchLine = function (number){
+class Line {
+    constructor(squares) {
+        this.squares = squares;
+        this.lineDone = false;
+    }
+    tryMatchLine(number) {
         let matched = false;
         let counter = 0;
-        while (!matched && counter < this.squares.length){
+        while (!matched && counter < this.squares.length) {
             matched = this.squares[counter].tryMatchSquare(number);
             counter++;
         }
         return matched;
     }
-    this.isFullLine = function(){
+    isFullLine() {
         let counter = 0;
         let fullLine = true;
-        while (!this.lineDone && fullLine && counter < this.squares.length){
+        while (!this.lineDone && fullLine && counter < this.squares.length) {
             fullLine = this.squares[counter].isMatchedSquare();
             counter++;
         }
-        if (fullLine){
+        if (fullLine) {
             this.lineDone = true;
         }
         return this.lineDone;
     }
-    this.showLine = function(){
+    showLine() {
         let returnedArray = [];
-        for (let i = 0; i < this.squares.length; i++){
+        for (let i = 0; i < this.squares.length; i++) {
             returnedArray.push(this.squares[i].showSquare());
         }
         return returnedArray;
@@ -71,39 +75,42 @@ function Line(squares){
  * 
  * @param lines array de objetos de tipo Line
  */
-function Board(lines){
-    this.lines = lines;
-    this.anyLineMatched = false;
-    this.tryMatchBoard = function(number){
+class Board {
+    constructor(lines) {
+        this.lines = lines;
+        this.anyLineMatched = false;
+    }
+    tryMatchBoard(number) {
         let matched = false;
         let counter = 0;
-        while (!matched && counter < this.lines.length){
+        while (!matched && counter < this.lines.length) {
             matched = this.lines[counter].tryMatchLine(number);
             counter++;
         }
         return matched;
     }
-    this.isFirstLine = function(){
-        if (this.anyLineMatched) return false; //solo canta linea la primera vez
+    isFirstLine() {
+        if (this.anyLineMatched)
+            return false; //solo canta linea la primera vez
         let counter = 0;
-        while (!this.anyLineMatched && counter < this.lines.length){
+        while (!this.anyLineMatched && counter < this.lines.length) {
             this.anyLineMatched = this.lines[counter].isFullLine();
             counter++;
         }
         return this.anyLineMatched;
     }
-    this.isBingoBoard = function(){
+    isBingoBoard() {
         let isBingo = true;
         let counter = 0;
-        while (isBingo && counter < this.lines.length){
+        while (isBingo && counter < this.lines.length) {
             isBingo = this.lines[counter].isFullLine();
             counter++;
         }
         return isBingo;
     }
-    this.showBoard = function(){
+    showBoard() {
         let returnedArray = [];
-        for (let i = 0; i < this.lines.length; i++){
+        for (let i = 0; i < this.lines.length; i++) {
             returnedArray.push(this.lines[i].showLine());
         }
         return returnedArray;
@@ -116,15 +123,17 @@ function Board(lines){
  * @param name el nombre del jugador
  * @param score la puntación conseguida por el jugador
  */
-function Score(name, score){
-    this.name = name;
-    this.score = score;
-    //date?
-    this.getScore = function (){
-        return this.score;
-    }
-    this.showScore = function(){
-        return this.name+": "+this.score+" puntos\n";
+class Score {
+    constructor(name, score) {
+        this.name = name;
+        this.score = score;
+        //date?
+        this.getScore = function () {
+            return this.score;
+        };
+        this.showScore = function () {
+            return this.name + ": " + this.score + " puntos\n";
+        };
     }
 }
 
@@ -135,36 +144,38 @@ function Score(name, score){
  * @param userName nombre del jugador, se almacenará como puntuación
  * @param disposableBoard boolean que indica si el jugador podrá desechar los cartones generados hasta quedarse con uno
  */
-function Game(userName, disposableBoard){
-    this.userName = userName;
-    this.board = generateBoard(disposableBoard);
-    this.drum = [];
-    this.score = 100;
-    this.show = function(){
+class Game {
+    constructor(userName, disposableBoard) {
+        this.userName = userName;
+        this.board = generateBoard(disposableBoard);
+        this.drum = [];
+        this.score = 100;
+    }
+    show() {
         return this.board.showBoard();
     }
-    this.tryMatch = function(number){
+    tryMatch(number) {
         return this.board.tryMatchBoard(number);
     }
-    this.isFirstLineGame = function(){
+    isFirstLineGame() {
         return this.board.isFirstLine();
     }
-    this.isBingo = function(){
+    isBingo() {
         return this.board.isBingoBoard();
     }
-    this.fillDrum = function(){
+    fillDrum() {
         this.drum.length = 0;
-        for (let i = 1; i <= 90; i++){
-            this.drum[i-1] = i;
+        for (let i = 1; i <= 90; i++) {
+            this.drum[i - 1] = i;
         }
     }
-    this.drawNumber = function(){
+    drawNumber() {
         return (this.drum.splice((Math.floor(Math.random() * this.drum.length)), 1))[0];
     }
-    this.updateScore = function(){
+    updateScore() {
         this.score--;
     }
-    this.getScore = function(){
+    getScore() {
         return new Score(this.userName, this.score);
     }
 }
@@ -174,15 +185,17 @@ function Game(userName, disposableBoard){
  * 
  * 
  */
-function ScoreBoard(){
-    this.scoreBoard = [];
-    this.addScore = function(score){
-        this.scoreBoard.push(score);
-        this.scoreBoard.sort((a, b) => b.getScore()-a.getScore());
+class ScoreBoard {
+    constructor() {
+        this.scoreBoard = [];
     }
-    this.showScoreBoard = function(){
+    addScore(score) {
+        this.scoreBoard.push(score);
+        this.scoreBoard.sort((a, b) => b.getScore() - a.getScore());
+    }
+    showScoreBoard() {
         let stringReturned = "";
-        for (let i = 0; i < this.scoreBoard.length; i++){
+        for (let i = 0; i < this.scoreBoard.length; i++) {
             stringReturned += this.scoreBoard[i].showScore();
         }
         return stringReturned;
@@ -290,18 +303,4 @@ function easyBoardGenerator(){
         }
     }
     return chosenNumbers;
-}
-
-/**
- * Función que genera un tablero completo de bingo con las restricciones de diseño del bingo real
- * SIN IMPLEMENTAR - Futura ampliación
- * 
- * @return chosenNumbers un array de arrays que representan las filas, y a su vez contienen los números
- */
-function boardGenerator(){
-    //genera un tablero completo de bingo con restricciones
-    //tres filas, nueve columnas, cada columna tiene los números de una decena, el 90 se incluye con los 8x
-    //cada columna tiene un máximo de dos números, tres de las nueve columnas tienen un número
-    //cada columna no mantiene la distribución de números y espacios de la anterior
-    //cada fila tiene 5 números
 }
