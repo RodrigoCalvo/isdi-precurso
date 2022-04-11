@@ -1,3 +1,26 @@
+#carrier{
+    position: absolute;
+    width: 10rem;
+    height: 2rem;
+    background-color: green;
+}
+#submarine{
+    position: absolute;
+    top: 3rem;
+    width: 6rem;
+    height: 2rem;
+    background-color: green;
+}
+
+
+
+
+
+
+
+
+
+
 body {
     background-color: black;
     color: #84c754;
