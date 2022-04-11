@@ -2,6 +2,9 @@
 dragElement(document.getElementById("carrier"));
 dragElement(document.getElementById("submarine"));
 
+// AMPLIAR
+// https://stackoverflow.com/questions/20926551/recommended-way-of-making-react-component-div-draggable
+// https://stackoverflow.com/questions/70843513/how-to-apply-drag-and-drop-for-a-div-spanning-multiple-cells
 
 function dragElement(elmnt) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
