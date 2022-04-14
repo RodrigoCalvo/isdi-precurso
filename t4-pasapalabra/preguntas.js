@@ -1,4 +1,4 @@
-export const questions = [
+const questions = [
     {letter: "a", answer: "abducir", question: "CON LA A. Dicho de una supuesta criatura extraterrestre: Apoderarse de alguien"},
     {letter: "b", answer: "bingo", question: "CON LA B. Juego que ha sacado de quicio a todos los 'Skylabers' en las sesiones de precurso"},
     {letter: "c", answer: "churumbel", question: "CON LA C. Niño, crío, bebé"},
@@ -108,3 +108,5 @@ export const questions = [
     {letter: "x", answer: "xilófono", question: "CON LA X. Instrumento musical formado por láminas de diferentes tamaños, que suenan al golpearlas"},
     {letter: "y", answer: "yegua", question: "CON LA Y. Hembra del caballo"},
     {letter: "z", answer: "zapato", question: "CON LA Z. Calzado que nos ponemos en los pies para caminar"}];
+
+    export { questions as questionsAnswersDataBase };
